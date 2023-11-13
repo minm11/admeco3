@@ -25,7 +25,7 @@ export default function SideBar({  user }) {
             </li>
           </Link>
 
-          {user.role === "admin" && (
+          {user.role = "admin" && (
             <Link to="/Progress" className="">
               <li
                 id="active"
@@ -47,7 +47,7 @@ export default function SideBar({  user }) {
             </li>
           </Link>
 
-          {user.role === "admin" && (
+          {user.role = "admin" && (
             <button
               id="active"
               className="h-9 bg-[#F9F9F9] items-center  rounded-full w-[97%] mx-2 mb-3 flex hover:text-[#3C91E6]"

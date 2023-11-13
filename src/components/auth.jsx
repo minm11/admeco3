@@ -1,7 +1,7 @@
 
 export const msalConfig = {
     auth: {
-      clientId: "4726ba85-7101-44dd-a14c-72b34be18d25",
+      clientId: "6a3fcc61-4be4-485a-b042-cf7e6885d8ae",
       
       authority: "https://login.microsoftonline.com/stamaria.sti.edu.ph",
     },
