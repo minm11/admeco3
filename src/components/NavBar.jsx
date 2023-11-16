@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AiOutlineMenu, AiOutlineSearch } from "react-icons/ai";
+import { AiOutlineMenu } from "react-icons/ai";
 import logo from "../assets/sti_logo.png";
 import Login from "./Login";
 
@@ -11,6 +11,7 @@ export default function NavBar({
   setUserAzure,
   user,
 }) {
+  
   const [openLogin, setOpenLogin] = useState(false);
   console.log(user)
   return (
@@ -25,18 +26,18 @@ export default function NavBar({
         <img className="h-20 " src={logo} alt="" />
         <h1 className="text-[24px] mr-6">ADMECO</h1>
 
-            
+        
             <button onClick={() => setOpenMenu(!openMenu)}>
             <AiOutlineMenu
               id="icon iconmenu"
               className="text-[20px] hover:text-[#F9F9F9] "
             />
           </button>
-          
+        
 
       </div>
 
-      <div className="flex">
+      {/* <div className="flex">
         <div
           id="searchbarcontainer"
           className="bg-white rounded-l-full flex justify-between h-9"
@@ -51,12 +52,14 @@ export default function NavBar({
         <div className="bg-yellow-400  rounded-r-full text-sm flex items-center p-2 h-9">
           <AiOutlineSearch id="icon" className="text-[20px]" />
         </div>
-      </div>
+      </div> */}
 
       
-        <div></div>
+        <div>
+          <div>
 
-      <div
+          </div>
+          <div
         onClick={() => setOpenLogin(!openLogin)}
         className="h-10 bg-slate-400 rounded-full w-10 mr-5 border-rose-500 border  "
       >
@@ -68,6 +71,9 @@ export default function NavBar({
           setUserAzure={setUserAzure}
         />
       </div>
+        </div>
+
+      
     </div>
   );
 }

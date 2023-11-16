@@ -1,13 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {BiChevronRight, BiFilter, BiErrorAlt, BiSolidGroup} from 'react-icons/bi' 
-import {AiOutlineSearch} from 'react-icons/ai'
-import profile from "../assets/profile.jpg"
+import {BiChevronRight} from 'react-icons/bi' 
 
 export default function Progress(){
     return(
         <div id="main" className=" pt-9 pb-28 px-5 font-lato mt-7 max-h-full overflow-y-auto   w-full">
-            <div id="headTitle" className="flex items-center justify-between gap-16 flex-wrap">
+            <div id="headTitle" className=" items-center gap-16 ">
                 <div id="container left">
                     <h1 className="text-4xl font-semibold mb-5 text-black">Progress</h1>
                     <div className="flex items-center gap-4">
@@ -19,12 +17,9 @@ export default function Progress(){
             </div>
             
             
-            <div id="table data" className="flex mt-[68px] ml-6 text-black">
+            <div id="table data" className=" mt-[68px] ml-6 text-black">
                 <div id="order" className=" basis-[75%]">
-                    <div id="head" className="flex items-center mb-8">
-                        <h1 className="text-2xl mr-auto font-semibold ">Progress</h1>
-                        <AiOutlineSearch/> <BiFilter/>
-                    </div>
+                    <h1 className="text-2xl mr-auto mb-8 font-semibold ">Progress</h1>
                     <table className="w-full border-collapse">
                         <thead>
                             <tr className="border-b-[1px]">
@@ -35,8 +30,8 @@ export default function Progress(){
                             </tr>
                         </thead>
                         <tbody className="">
-							<tr className=" px-10 items-center  hover:bg-[#eee]">
-                                <td className="p-7 flex ">
+							<tr className=" px-10 hover:bg-[#eee]">
+                                <td className="p-7  ">
 									
                                     <p className="pl-1">Ron Jericho manzano</p>
 								</td>

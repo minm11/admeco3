@@ -7,7 +7,6 @@ import { FaBarsProgress, FaFileImport } from "react-icons/fa6";
 
 export default function SideBar({  user }) {
   const [isOpen, setIsOpen] = useState(false);
-  console.log(user)
   return (
     <div
       id="sidebar"
