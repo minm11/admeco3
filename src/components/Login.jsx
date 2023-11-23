@@ -12,7 +12,7 @@ export default function Login({
   setUserAzure,
 }) {
   const [userData, setUserData] = useState();
-
+  var loginResponse;
   useEffect(() => {
     async function run() {
       const { data: admin } = await supabase.from("admin").select();
@@ -21,7 +21,9 @@ export default function Login({
     run();
   }, [openLogin]);
 
+  
   async function authen(user) {
+    console.log(user)
     if (userData) {
       for (let index = 0; index < userData.length; index++) {
         if ((userData[index].adminEmail = user.username)) {
@@ -33,18 +35,18 @@ export default function Login({
           const { data, error } = await supabase
             .from("admin")
             .update({ adminName: loginResponse.account.name })
-            .eq("id", 1)
+            .eq("adminEmail", loginResponse.account.username)
             .select();
         }
       }
     }
   }
 
-  var loginResponse;
+ 
   const loginAZURE = async () => {
     try {
       loginResponse = await msalinstance.loginPopup(loginRequest);
-      authen(loginResponse.account);
+      await authen(loginResponse.account);
     } catch (error) {
       console.error("Authentication error", error);
     }

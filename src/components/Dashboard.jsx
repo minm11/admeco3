@@ -44,7 +44,7 @@ export default function Home() {
           </div>
           <div>
             <h1 className="font-bold text-2xl">20</h1>
-            <p className="whitespace-nowrap">New Failure Student</p>
+            <p className="whitespace-nowrap">New Failed Student</p>
           </div>
         </div>
         <div className="items-center flex gap-5 w-[80.5%]">

@@ -16,7 +16,7 @@ import Login from "./components/Login";
 export default function App({ msalinstance }) {
   const [openMenu, setOpenMenu] = useState(false);
   const [user, setUser] = useState();
-  const [userAzure, setUserAzure] = useState();
+  const [userAzure, setUserAzure] = useState(null);
 
   console.log(userAzure);
 
@@ -31,11 +31,12 @@ export default function App({ msalinstance }) {
       >
         {user && <SideBar openMenu={openMenu} user={user} />}
       </div>
-      <NavBar
+       <NavBar
         setOpenMenu={setOpenMenu}
         openMenu={openMenu}
         msalinstance={msalinstance}
         setUser={setUser}
+        userAzure={userAzure}
         setUserAzure={setUserAzure}
         user={user}
       />

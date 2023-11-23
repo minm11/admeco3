@@ -1,7 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {BiChevronRight, BiFilter, BiErrorAlt, BiSolidGroup} from 'react-icons/bi' 
+import {BiChevronRight} from 'react-icons/bi' 
 
+import { BsCalendar2MinusFill } from "react-icons/bs";
 export default function Activity(){
     return(     
         <div id="main" className="  pt-9 pb-28 px-5 font-lato mt-7 max-h-full overflow-y-auto  w-full">
@@ -17,7 +18,7 @@ export default function Activity(){
             </div>
             
             <div id="table data" className=" mt-[68px] ml-6 text-black">
-                <div id="order" className=" basis-[75%]">
+                <div id="order" className="">
                     <h1 className="text-2xl mr-auto mb-8 font-semibold ">Activity</h1>
                     <table className="w-full border-collapse">
                         <thead>
@@ -27,42 +28,39 @@ export default function Activity(){
                                 <th className="pb-1 text-sm text-left bottom-1 border-solid border-[#eee]">Status</th>
                             </tr>
                         </thead>
-                        <tbody className="">
-							<tr className=" px-10 hover:bg-[#eee]">
-                                <td className="p-7  ">
-									
-                                    <p className="pl-1">Ron Jericho manzano</p>
+                        <tbody className="mt-2">
+                            <tr className="border-x-2 mb-5 bg-[#eee] rounded-lg px-6 py-6  flex  ">
+                                <td className="flex items-center  ">
+                                    <BsCalendar2MinusFill className="text-[#ff0000]" />
+                                    <p className="ml-4">teacher name</p>
 								</td>
-								<td>Midterm</td>
-								<td>28-09-2023</td>
-								<td><span className="status Passed">Passed</span></td>
+								<td>November 15, 2023 2:08 AM</td>
+								<td>imported a report</td>
 							</tr>
-							<tr className="h-24 hover:bg-[#eee]">
-                                <td className="p-7">
-									
-									<p className="pl-1">Vincent Baliuag</p>
+                            <tr className="border-x-2 mb-5 bg-[#eee] rounded-lg px-6 py-6  flex  ">
+                                <td className="flex items-center  ">
+                                    <BsCalendar2MinusFill className="text-[#ff0000]" />
+                                    <p className="ml-4">teacher name</p>
 								</td>
-                                <td>Prelim</td>
-								<td>28-09-2023</td>
-								<td><span className="status Failure">Failure</span></td>
+								<td>November 15, 2023 2:08 AM</td>
+								<td>imported a report</td>
 							</tr>
-							<tr className=" hover:bg-[#eee]">
-                                <td className=" p-7">
-									<p className="pl-1">Alto Alexander</p>
+                            <tr className="border-x-2 mb-5 bg-[#eee] rounded-lg px-6 py-6  flex  ">
+                                <td className="flex items-center  ">
+                                    <BsCalendar2MinusFill className="text-[#ff0000]" />
+                                    <p className="ml-4">teacher name</p>
 								</td>
-                                <td>Finals</td>
-								<td>28-09-2023</td>
-								<td><span className="status Improving">Improving</span></td>
+								<td>November 15, 2023 2:08 AM</td>
+								<td>imported a report</td>
 							</tr>
-							<tr className="  hover:bg-[#eee]">
-                                <td className="p-7">
-									<p className="pl-1">Ceejay Fajardo</p>
+                            <tr className="border-x-2 mb-5 bg-[#eee] rounded-lg px-6 py-6  flex  ">
+                                <td className="flex items-center  ">
+                                    <BsCalendar2MinusFill className="text-[#ff0000]" />
+                                    <p className="ml-4">teacher name</p>
 								</td>
-                                <td>Midterm</td>
-								<td>28-09-2023</td>
-								<td><span className="status Failure">Failure</span></td>
+								<td>November 15, 2023 2:08 AM</td>
+								<td>imported a report</td>
 							</tr>
-							
 						</tbody>
                     </table>
                 </div>

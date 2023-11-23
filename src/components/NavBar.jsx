@@ -1,19 +1,19 @@
 import React, { useState } from "react";
 import { AiOutlineMenu } from "react-icons/ai";
 import logo from "../assets/sti_logo.png";
-import Login from "./Login";
+import Login from "./Login";  
 
 export default function NavBar({
   setOpenMenu,
   openMenu,
   msalinstance,
   setUser,
+  userAzure,
   setUserAzure,
   user,
 }) {
-  
   const [openLogin, setOpenLogin] = useState(false);
-  console.log(user)
+  console.log(user);
   return (
     <div
       id="Nav"
@@ -27,14 +27,12 @@ export default function NavBar({
         <h1 className="text-[24px] mr-6">ADMECO</h1>
 
         
-            <button onClick={() => setOpenMenu(!openMenu)}>
-            <AiOutlineMenu
-              id="icon iconmenu"
-              className="text-[20px] hover:text-[#F9F9F9] "
-            />
-          </button>
-        
-
+        <button onClick={() => setOpenMenu(!openMenu)}>
+          <AiOutlineMenu
+            id="icon iconmenu"
+            className={`text-[20px] hover:text-[#F9F9F9] ${(userAzure) != null ? '': 'hidden'}`}
+          />
+        </button>
       </div>
 
       {/* <div className="flex">
@@ -55,25 +53,24 @@ export default function NavBar({
       </div> */}
 
       
-        <div>
-          <div>
-
-          </div>
-          <div
-        onClick={() => setOpenLogin(!openLogin)}
-        className="h-10 bg-slate-400 rounded-full w-10 mr-5 border-rose-500 border  "
-      >
-        <Login
-          msalinstance={msalinstance}
-          setOpenLogin={setOpenLogin}
-          openLogin={openLogin}
-          setUser={setUser}
-          setUserAzure={setUserAzure}
-        />
-      </div>
+      <div className="flex items-center gap-2 cursor-pointer mr-4">
+        <div className="flex items-center gap-1 opacity-90 md:text-base text-[11px]">
+          <h1>ex name</h1>
         </div>
-
-      
+        <div
+          onClick={() => setOpenLogin(!openLogin)}
+          className="md:h-10 md:w-10 h-8 w-8 rounded-full text-sm hover:ring-2 hover:ring-white "
+          
+        >
+          <Login
+            msalinstance={msalinstance}
+            setOpenLogin={setOpenLogin}
+            openLogin={openLogin}
+            setUser={setUser}
+            setUserAzure={setUserAzure}
+          />
+        </div>
+      </div>
     </div>
   );
 }

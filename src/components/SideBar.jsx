@@ -2,10 +2,11 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { LuLayoutDashboard } from "react-icons/lu";
 import { PiClipboardTextBold, PiReadCvLogoFill } from "react-icons/pi";
-import {  AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
+import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { FaBarsProgress, FaFileImport } from "react-icons/fa6";
 
-export default function SideBar({  user }) {
+//ayusin ko lang yung role shits
+export default function SideBar({ user }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div
@@ -14,27 +15,33 @@ export default function SideBar({  user }) {
     >
       <div className="side">
         <ul id="sideMenuTop" className="w-100% mt-[51px]">
-          <Link to="/" className="">
-            <li
-              id="active"
-              className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] flex rounded-full mb-3 hover:text-[#3C91E6]"
-            >
-              <LuLayoutDashboard id="icon dashboard" className="" />
-              <h1 className="ml-4"> Dashboard</h1>
-            </li>
-          </Link>
+          {
+            (user.role = "teacher" && (
+              <Link to="/" className="">
+                <li
+                  id="active"
+                  className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] flex rounded-full mb-3 hover:text-[#3C91E6]"
+                >
+                  <LuLayoutDashboard id="icon dashboard" className="" />
+                  <h1 className="ml-4"> Dashboard</h1>
+                </li>
+              </Link>
+            ))
+          }
 
-          {user.role = "admin" && (
-            <Link to="/Progress" className="">
-              <li
-                id="active"
-                className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] rounded-full  mb-3 flex hover:text-[#3C91E6]"
-              >
-                <FaBarsProgress id="icon Progress" className="" />
-                <h1 className="ml-4"> Progress</h1>
-              </li>
-            </Link>
-          )}
+          {
+            (user.role = "admin" && (
+              <Link to="/Progress" className="">
+                <li
+                  id="active"
+                  className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] rounded-full  mb-3 flex hover:text-[#3C91E6]"
+                >
+                  <FaBarsProgress id="icon Progress" className="" />
+                  <h1 className="ml-4"> Progress</h1>
+                </li>
+              </Link>
+            ))
+          }
 
           <Link to="/Import" className=" ">
             <li
@@ -46,19 +53,22 @@ export default function SideBar({  user }) {
             </li>
           </Link>
 
-          {user.role = "admin" && (
-            <button
-              id="active"
-              className="h-9 bg-[#F9F9F9] items-center  rounded-full w-[97%] mx-2 mb-3 flex hover:text-[#3C91E6]"
-              onClick={() => setIsOpen((prev) => !prev)}
-            >
-              <PiReadCvLogoFill id="icon Logs" className="ml-4" />
-              <h1 className="ml-4">Logs</h1>
-              {!isOpen ? <AiFillCaretDown /> : <AiFillCaretUp />}
-            </button>
-          )}
+          {
+            (user.role = "admin" && (
+              <button
+                id="active"
+                className="h-9 bg-[#F9F9F9] items-center  rounded-full w-[97%] mx-2 mb-3 flex hover:text-[#3C91E6]"
+                onClick={() => setIsOpen((prev) => !prev)}
+              >
+                <PiReadCvLogoFill id="icon Logs" className="ml-4" />
+                <h1 className="ml-4">Logs</h1>
+                {!isOpen ? <AiFillCaretDown /> : <AiFillCaretUp />}
+              </button>
+            ))
+          }
           {isOpen && (
             <>
+              {/* role ng ni admin */}
               <Link to="/Activity" className="">
                 <li
                   id="active"
@@ -74,11 +84,21 @@ export default function SideBar({  user }) {
                   className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
                 >
                   <PiClipboardTextBold id="icon Activity" className="" />
-                  <h1 className="ml-4"> Login EX</h1>
+                  <h1 className="ml-4"> user role creation</h1>
                 </li>
               </Link>
             </>
           )}
+
+            {/* logout */}
+            <li
+              id="active"
+              className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
+            >
+              <PiClipboardTextBold id="icon Activity" className="" />
+              <h1 className="ml-4"> logout</h1>
+            </li>
+          
         </ul>
       </div>
     </div>
