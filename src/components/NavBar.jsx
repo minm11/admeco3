@@ -11,9 +11,9 @@ export default function NavBar({
   userAzure,
   setUserAzure,
   user,
+  setAdminRole
 }) {
   const [openLogin, setOpenLogin] = useState(false);
-  console.log(user);
   return (
     <div
       id="Nav"
@@ -59,17 +59,18 @@ export default function NavBar({
         </div>
         <div
           onClick={() => setOpenLogin(!openLogin)}
-          className="md:h-10 md:w-10 h-8 w-8 rounded-full text-sm hover:ring-2 hover:ring-white "
+          className="md:h-10 md:w-10 h-8 w-8 rounded-full text-sm hover:ring-2 hover:ring-white bg-white"
           
         >
-          <Login
+        </div>
+        <Login
             msalinstance={msalinstance}
             setOpenLogin={setOpenLogin}
             openLogin={openLogin}
             setUser={setUser}
             setUserAzure={setUserAzure}
+            setAdminRole={setAdminRole}
           />
-        </div>
       </div>
     </div>
   );
