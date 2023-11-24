@@ -17,29 +17,46 @@ export default function App({ msalinstance }) {
   const [userAzure, setUserAzure] = useState(null);
   const [adminRole, setAdminRole] = useState(false);
 
-  console.log(adminRole + " " + user);
-
+  //console.log(adminRole + " " + user);
+  // accounts Table [name,email,role]
   useEffect(() => {
-    authen();
+    if (userAzure) authen();
   }, [userAzure]);
-  async function authen(user) {
-    // const { data, error } = await supabase.from("accounts").insert({name:userAzure.name}).eq("name", userAzure.username)
-    // if (userData) {
-    //   for (let index = 0; index < userData.length; index++) {
-    //     if (userData[index].adminEmail = user.username) {
-    //       setUser(userData);
-    //       setUserAzure(loginResponse);
-    //       if (userData[index].adminName = null) {
-    //         alert(loginResponse.name)
-    //       console.log(loginResponse)
-    //       const { data, error } = await supabase
-    //         .from("accounts")
-    //         .insert({ name: loginResponse.account.name, email: loginResponse.account.username })
-    //       }
-    //   }
-    // }
+
+  async function authen() {
+    await nameChecker();
+    const { data: accounts } = await supabase.from("accounts").select();
+
+    for (let index = 0; index < accounts.length; index++) {
+      if (
+        userAzure.username === accounts.email &&
+        accounts.email === "teacher"
+      ) {
+        setUser("teacher");
+      }
+      if (
+        userAzure.username === accounts.email &&
+        accounts.email === "guidance"
+      ) {
+        setUser("guidance");
+      }
+    }
   }
-console.log(user)
+
+  async function nameChecker() {
+    alert(true)
+    const { data: accounts } = await supabase.from("accounts").select();
+    for (let index = 0; index < accounts.length; index++) {
+      if (accounts[index].email === userAzure.username) {
+        const { data: insertAccounts } = await supabase
+          .from("accounts")
+          .update({ name: userAzure.name })
+          .eq("email", userAzure.username);
+      }
+    }
+    return;
+  }
+
   return (
     <div className="flex h-screen ">
       <div
@@ -51,18 +68,19 @@ console.log(user)
       >
         {user && <SideBar openMenu={openMenu} user={user} />}
       </div>
-      <NavBar
-        setOpenMenu={setOpenMenu}
-        openMenu={openMenu}
-        msalinstance={msalinstance}
-        setUser={setUser}
-        userAzure={userAzure}
-        setUserAzure={setUserAzure}
-        user={user}
-        setAdminRole={setAdminRole}
-      />
-      <div className="w-[100%] overflow-hidden">
-        <div className="mt-12">
+
+      <div className="w-[100%] overflow-hidden flex">
+        <NavBar
+          setOpenMenu={setOpenMenu}
+          openMenu={openMenu}
+          msalinstance={msalinstance}
+          setUser={setUser}
+          userAzure={userAzure}
+          setUserAzure={setUserAzure}
+          user={user}
+          setAdminRole={setAdminRole}
+        />
+        <div className="mt-12 z-0">
           {adminRole && (
             <Routes>
               <Route path="/import" element={<Import />} />
@@ -73,8 +91,8 @@ console.log(user)
           )}
 
           <Routes>
-            <Route path="/" element={<AdminPages />} />
-            <Route path="/Admin" element={<Dashboard />} />
+            <Route path="/Admin" element={<AdminPages />} />
+            <Route path="/" element={<Dashboard />} />
             <Route
               path="/Login"
               element={<Login msalinstance={msalinstance} />}

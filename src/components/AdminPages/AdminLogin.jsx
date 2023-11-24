@@ -14,8 +14,7 @@ function AdminLogin({ setOpenLogin, openLogin, setAdminRole, setUser }) {
         adminData[index].adminpass === info.password
       ) {
         setAdminRole(true);
-        setUser(adminData[index]);
-
+        setUser("admin")
         close();
         return;
       } else {
