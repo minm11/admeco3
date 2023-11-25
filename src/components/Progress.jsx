@@ -4,7 +4,7 @@ import {BiChevronRight} from 'react-icons/bi'
 
 export default function Progress(){
     return(
-        <div id="main" className=" pt-9 pb-28 px-5 font-lato mt-7 max-h-full overflow-y-auto   w-full">
+        <div id="main" className="pt-9 pb-28 px-5 font-lato mt-7 max-h-screen overflow-y-auto fixed w-[100%]">
             <div id="headTitle" className=" items-center gap-16 ">
                 <div id="container left">
                     <h1 className="text-4xl font-semibold mb-5 text-black">Progress</h1>
@@ -18,7 +18,7 @@ export default function Progress(){
             
             
             <div id="table data" className=" mt-[68px] ml-6 text-black">
-                <div id="order" className=" basis-[75%]">
+                <div id="order" className=" ">
                     <h1 className="text-2xl mr-auto mb-8 font-semibold ">Progress</h1>
                     <table className="w-full border-collapse">
                         <thead>

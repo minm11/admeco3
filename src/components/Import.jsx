@@ -51,7 +51,7 @@ export default function Import() {
   return (
     <div
       id="main"
-      className=" pt-9 pb-28 px-5 font-lato mt-7 max-h-full overflow-y-auto  w-full"
+      className=" pt-9 pb-28 px-5 font-lato mt-7 max-h-screen overflow-y-auto fixed w-[100%]"
     >
       <div
         id="headTitle"

@@ -7,6 +7,7 @@ import { FaBarsProgress, FaFileImport } from "react-icons/fa6";
 
 //ayusin ko lang yung role shits
 export default function SideBar({ user }) {
+  console.log(user);
   const [isOpen, setIsOpen] = useState(false);
   return (
     <div
@@ -16,17 +17,18 @@ export default function SideBar({ user }) {
       <div className="side">
         <ul id="sideMenuTop" className="w-100% mt-[51px]">
           {
-            (user = "teacher" && (
-              <Link to="/" className="">
-                <li
-                  id="active"
-                  className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] flex rounded-full mb-3 hover:text-[#3C91E6]"
-                >
-                  <LuLayoutDashboard id="icon dashboard" className="" />
-                  <h1 className="ml-4"> Dashboard</h1>
-                </li>
-              </Link>
-            ))
+            (user =
+              "admin" && (
+                <Link to="/" className="">
+                  <li
+                    id="active"
+                    className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] flex rounded-full mb-3 hover:text-[#3C91E6]"
+                  >
+                    <LuLayoutDashboard id="icon dashboard" className="" />
+                    <h1 className="ml-4"> Dashboard</h1>
+                  </li>
+                </Link>
+              ))
           }
 
           {
@@ -42,16 +44,22 @@ export default function SideBar({ user }) {
               </Link>
             ))
           }
-
-          <Link to="/Import" className=" ">
-            <li
-              id="active"
-              className="h-9 bg-[#F9F9F9]  items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
-            >
-              <FaFileImport id="icon Import" className="" />
-              <h1 className="ml-4"> import</h1>
-            </li>
-          </Link>
+          {
+            (user =
+              "admin"  && (
+                <>
+                  <Link to="/Import" className=" ">
+                    <li
+                      id="active"
+                      className="h-9 bg-[#F9F9F9]  items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
+                    >
+                      <FaFileImport id="icon Import" className="" />
+                      <h1 className="ml-4"> import</h1>
+                    </li>
+                  </Link>
+                </>
+              ))
+          }
 
           {
             (user = "admin" && (
@@ -90,15 +98,14 @@ export default function SideBar({ user }) {
             </>
           )}
 
-            {/* logout */}
-            <li
-              id="active"
-              className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
-            >
-              <PiClipboardTextBold id="icon Activity" className="" />
-              <h1 className="ml-4"> logout</h1>
-            </li>
-          
+          {/* logout */}
+          <li
+            id="active"
+            className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
+          >
+            <PiClipboardTextBold id="icon Activity" className="" />
+            <h1 className="ml-4"> logout</h1>
+          </li>
         </ul>
       </div>
     </div>

@@ -10,66 +10,48 @@ import Import from "./components/Import";
 import Login from "./components/Login";
 import AdminPages from "./components/AdminPages/Admin";
 import supabase from "./supabaseClient";
-//
+import { v4 as uuidv4 } from "uuid";
+
 export default function App({ msalinstance }) {
   const [openMenu, setOpenMenu] = useState(false);
   const [user, setUser] = useState();
   const [userAzure, setUserAzure] = useState(null);
   const [adminRole, setAdminRole] = useState(false);
+  const [accountsInfo, setAccountsInfo] = useState([]);
 
-  //console.log(adminRole + " " + user);
-  // accounts Table [name,email,role]
   useEffect(() => {
-    if (userAzure) authen();
-  }, [userAzure]);
+    tokenChecker();
+    supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "accounts" },
+        (payload) => {
+          tokenChecker();
+        }
+      )
+      .subscribe();
+  }, []);
 
-  async function authen() {
-    await nameChecker();
+  async function tokenChecker() {
     const { data: accounts } = await supabase.from("accounts").select();
-
     for (let index = 0; index < accounts.length; index++) {
-      if (
-        userAzure.username === accounts.email &&
-        accounts.email === "teacher"
-      ) {
-        setUser("teacher");
+      if (window.localStorage.getItem("susi") === accounts[index].accessToken) {
+        setUser(accounts[index].role);
+        return;
       }
-      if (
-        userAzure.username === accounts.email &&
-        accounts.email === "guidance"
-      ) {
-        setUser("guidance");
+      if (window.localStorage.getItem("susi") !== accounts[index].accessToken) {
+        window.localStorage.clear();
+        setUser(false);
+
+        return;
       }
     }
   }
-
-  async function nameChecker() {
-    alert(true)
-    const { data: accounts } = await supabase.from("accounts").select();
-    for (let index = 0; index < accounts.length; index++) {
-      if (accounts[index].email === userAzure.username) {
-        const { data: insertAccounts } = await supabase
-          .from("accounts")
-          .update({ name: userAzure.name })
-          .eq("email", userAzure.username);
-      }
-    }
-    return;
-  }
-
+  console.log(user);
   return (
     <div className="flex h-screen ">
-      <div
-        className={`${
-          openMenu
-            ? "w-[280px] h-screen transition-transform duration-200 overflow-hidden"
-            : "w-0 hidden h-screen transition-transform duration-200"
-        }`}
-      >
-        {user && <SideBar openMenu={openMenu} user={user} />}
-      </div>
-
-      <div className="w-[100%] overflow-hidden flex">
+      <div className=" overflow-hidden flex">
         <NavBar
           setOpenMenu={setOpenMenu}
           openMenu={openMenu}
@@ -79,19 +61,31 @@ export default function App({ msalinstance }) {
           setUserAzure={setUserAzure}
           user={user}
           setAdminRole={setAdminRole}
+          uuidv4={uuidv4()}
         />
+        <div
+          className={`${
+            openMenu
+              ? "w-[280px] h-screen transition-transform duration-200 overflow-hidden"
+              : "w-0 hidden h-screen transition-transform duration-200"
+          }`}
+        >
+          {user && <SideBar openMenu={openMenu} user={user} />}
+        </div>
+
         <div className="mt-12 z-0">
           {adminRole && (
             <Routes>
-              <Route path="/import" element={<Import />} />
-              <Route path="/progress" element={<Progress />} />
-
               <Route path="/activity" element={<Activity />} />
             </Routes>
           )}
 
+
+
           <Routes>
             <Route path="/Admin" element={<AdminPages />} />
+            <Route path="/import" element={<Import />} />
+            <Route path="/progress" element={<Progress />} />
             <Route path="/" element={<Dashboard />} />
             <Route
               path="/Login"

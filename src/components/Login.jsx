@@ -12,23 +12,54 @@ export default function Login({
   setUser,
   setUserAzure,
   setAdminRole,
+  uuidv4,
 }) {
   const [userData, setUserData] = useState();
   const [isAdmin, setAdmin] = useState(false);
 
-  useEffect(() => {
-    async function run() {
-      const { data: accounts } = await supabase.from("accounts").select();
-      setUserData(accounts);
-    }
-    run();
-  }, [openLogin]);
-
   var loginResponse;
+
+  // Login Checker
+  async function Auth(userAccount) {
+    const { data: fetchAccount } = await supabase.from("accounts").select();
+
+    for (let index = 0; index < fetchAccount.length; index++) {
+      if (fetchAccount[index].email === userAccount.username) {
+        await supabase
+          .from("accounts")
+          .update({ accessToken: uuidv4 })
+          .eq("email", userAccount.username)
+          .single();
+        window.localStorage.setItem("susi", uuidv4);
+        setUserAzure(loginResponse.account);
+        setUser(fetchAccount[index].role);
+        nameChecker(loginResponse.account);
+        return;
+      }
+    }
+    alert("Not Registered");
+  }
+ 
+  // Check if user has already set the name in database
+  async function nameChecker(info) {
+    const { data: accounts } = await supabase.from("accounts").select();
+    for (let index = 0; index < accounts.length; index++) {
+      if (accounts[index].email === info.username) {
+        const { data: insertAccounts } = await supabase
+          .from("accounts")
+          .update({ name: info.name })
+          .eq("email", info.username)
+          .single();
+      }
+    }
+    return;
+  }
+
   const loginAZURE = async () => {
     try {
       loginResponse = await msalinstance.loginPopup(loginRequest);
-      await setUserAzure(loginResponse.account);
+      Auth(loginResponse.account);
+      alert("logged in")
     } catch (error) {
       console.error("Authentication error", error);
     }
