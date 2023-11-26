@@ -29,7 +29,7 @@ function AdminLogin({ setOpenLogin, openLogin, setAdminRole, setUser }) {
   //   Create access key every login
   //   Refresh check access key
 
-  const handlechange = (e) => {
+  const handleChange = (e) => {
     setInfo((previnfo) => {
       return { ...previnfo, [e.target.name]: e.target.value };
     });
@@ -43,7 +43,7 @@ function AdminLogin({ setOpenLogin, openLogin, setAdminRole, setUser }) {
           required
           text="text"
           name="username"
-          onChange={handlechange}
+          onChange={handleChange}
           className="bg-slate-300 rounded-md p-1"
         ></input>
         <label>Password</label>
@@ -51,7 +51,7 @@ function AdminLogin({ setOpenLogin, openLogin, setAdminRole, setUser }) {
           required
           text="text"
           name="password"
-          onChange={handlechange}
+          onChange={handleChange}
           className="bg-slate-300 rounded-md p-1"
         ></input>
         <button>LOGIN</button>

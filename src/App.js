@@ -8,9 +8,10 @@ import Progress from "./components/Progress";
 import Activity from "./components/Activity";
 import Import from "./components/Import";
 import Login from "./components/Login";
-import AdminPages from "./components/AdminPages/Admin";
+//import AdminPages from "./components/AdminPages/Admin";
 import supabase from "./supabaseClient";
 import { v4 as uuidv4 } from "uuid";
+import UserRoleCreation from "./components/UserRoleCreation";
 
 export default function App({ msalinstance }) {
   const [openMenu, setOpenMenu] = useState(false);
@@ -83,7 +84,8 @@ export default function App({ msalinstance }) {
 
 
           <Routes>
-            <Route path="/Admin" element={<AdminPages />} />
+            {/* <Route path="/Admin" element={<AdminPages />} /> */}
+            <Route path="/userrole" element={<UserRoleCreation />} />
             <Route path="/import" element={<Import />} />
             <Route path="/progress" element={<Progress />} />
             <Route path="/" element={<Dashboard />} />

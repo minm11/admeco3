@@ -86,7 +86,7 @@ export default function SideBar({ user }) {
                   <h1 className="ml-4"> Activity</h1>
                 </li>
               </Link>{" "}
-              <Link to="/Login" className="">
+              <Link to="/userrole" className="">
                 <li
                   id="active"
                   className="h-9 bg-[#F9F9F9] items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
