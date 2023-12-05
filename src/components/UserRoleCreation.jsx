@@ -9,13 +9,16 @@ const UserRoleCreation = () => {
     role: "",
   });
   const [Users, setUsers] = useState([]);
+
+  
   //*Handle onchange of inputs
   function handleChange(e) {
     setFormData((prevForm) => ({
-      //return {
+      //return{
       ...prevForm,
       [e.target.name]: e.target.value,
       //};
+
     }));
   }
 
@@ -25,13 +28,15 @@ const UserRoleCreation = () => {
     const { data, error } = await supabase
       .from("accounts")
       .insert([{ email: formData.email, role: formData.role }]);
+      
     try {
       if (error) throw error;
       else {
-        console.log("Data Inserted Successfully");
+        alert("Data Inserted Successfully");
       }
     } catch (error) {
-      console.error("Error", error.message);
+      alert("Error", error.message);
+      console.log("Error", error.message)
     }
   }
 
@@ -74,7 +79,7 @@ const UserRoleCreation = () => {
           <div>
             <label className="text-gray-700">Email:</label>
             <input
-              onchange={handleChange}
+              onChange={handleChange}
               type=" text"
               name="email"
               className="border rounded px -2 py -1 w-full focus:outline-none focus:border-indigo-500"

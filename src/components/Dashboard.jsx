@@ -1,26 +1,23 @@
-import React from "react";
+import React  from "react";
 import { Link } from "react-router-dom";
 import { BiChevronRight, BiErrorAlt, BiSolidGroup } from "react-icons/bi";
 import { BsCalendar2MinusFill } from "react-icons/bs";
 
 export default function Home() {
+
   return (
-    /*
-            TODO: OBTAIN MORE NIGGERS FROM THE FOREST
-            ? Why nigger?
-        */
-    //TODO: my name is jafar
-    //TODO: i come from afar
-    //TODO: there's a bag in my car
-    //TODO: alahuakbar!!!
     <div
       id="main"
       className="  pt-9 pb-28 px-5 font-lato mt-7 max-h-screen overflow-y-auto fixed w-[100%]"
     >
+
       <div
         id="headTitle"
         className="flex items-center justify-between gap-16 flex-wrap"
       >
+         
+        
+
         <div id="container left">
           <h1 className="text-4xl font-semibold mb-5 text-black">Dashboard</h1>
           <div className="flex items-center gap-4">
@@ -32,8 +29,13 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </div>
 
+
+      </div>
+              
+
+              
+      
       <div
         id="container info"
         className="grid  lg:grid-cols-4 gap-24 mt-[5%] ml-6"
@@ -48,7 +50,9 @@ export default function Home() {
           </div>
         </div>
         <div className="items-center flex gap-5 w-[80.5%]">
-          <div id="box info" className="p-3 bg-green-700   rounded-2xl">
+
+         {/*  temporary remove :)
+         <div id="box info" className="p-3 bg-green-700   rounded-2xl">
             <BiSolidGroup
               id="icon iconError"
               className="  text-white text-6xl"
@@ -60,16 +64,24 @@ export default function Home() {
           </div>
         </div>
         <div className="items-center flex gap-5 w-[80.5%]">
+
+
           <div id="box info" className="p-3 bg-yellow-400   rounded-2xl">
             <BiSolidGroup
               id="icon iconError"
               className="  text-white text-6xl"
             />
-          </div>
+          </div> 
+         
+
+
+
           <div>
             <h1 className="font-bold text-2xl">5</h1>
             <p className="whitespace-nowrap">Busy User</p>
           </div>
+                */}
+
         </div>
       </div>
 
@@ -202,6 +214,10 @@ export default function Home() {
             </div>
           </div>
         </div>
+       
+       
+
+
       </div>
     </div>
   );

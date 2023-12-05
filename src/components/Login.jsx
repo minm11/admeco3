@@ -5,24 +5,24 @@ import { SiMicrosoftoffice } from "react-icons/si";
 import { IoClose } from "react-icons/io5";
 import AdminLogin from "./AdminPages/AdminLogin";
 
-export default function Login({
+export function Login({
   msalinstance,
+  loginResponse,
   openLogin,
   setOpenLogin,
   setUser,
   setUserAzure,
+  setLoggedIn,
   setAdminRole,
   uuidv4,
 }) {
   const [userData, setUserData] = useState();
   const [isAdmin, setAdmin] = useState(false);
 
-  var loginResponse;
-
   // Login Checker
   async function Auth(userAccount) {
+    window.localStorage.setItem("accountID", await userAccount.homeAccountId  );
     const { data: fetchAccount } = await supabase.from("accounts").select();
-
     for (let index = 0; index < fetchAccount.length; index++) {
       if (fetchAccount[index].email === userAccount.username) {
         await supabase
@@ -34,18 +34,19 @@ export default function Login({
         setUserAzure(loginResponse.account);
         setUser(fetchAccount[index].role);
         nameChecker(loginResponse.account);
+        setLoggedIn(true)
         return;
       }
     }
     alert("Not Registered");
   }
- 
+
   // Check if user has already set the name in database
   async function nameChecker(info) {
     const { data: accounts } = await supabase.from("accounts").select();
     for (let index = 0; index < accounts.length; index++) {
       if (accounts[index].email === info.username) {
-        const { data: insertAccounts } = await supabase
+        const { data: insertaccounts } = await supabase
           .from("accounts")
           .update({ name: info.name })
           .eq("email", info.username)
@@ -55,16 +56,21 @@ export default function Login({
     return;
   }
 
+  //read username
+
   const loginAZURE = async () => {
     try {
       loginResponse = await msalinstance.loginPopup(loginRequest);
       Auth(loginResponse.account);
-      alert("logged in")
+      
+      alert("logged in");
+      
     } catch (error) {
       console.error("Authentication error", error);
+      alert("Authentication failed. Please try again."); // new
     }
   };
-
+  
   if (!openLogin) return null;
 
   return (
@@ -73,19 +79,23 @@ export default function Login({
       className="fixed inset-0 items-center justify-center place-content-center 
          bg-opacity-10 backdrop-blur-md flex font-lato w-full z-100 "
     >
-      <div id="main2" className="shadow-[#0000009f] shadow-md  rounded-md  ">
+      <div
+        id="main2"
+        className="shadow-[#0000009f] shadow-md  rounded-md bg-white w [300px] "
+      >
         <div
           id="header"
-          className=" relative rounded-t-lg  px-3 h-8 overflow-hidden flex justify-between items-center bg-[#3C91E6]"
+          className=" text-white font-bold text-2x1  relative rounded-t-lg  px-3 h-8 overflow-hidden flex justify-between items-center bg-[#3C91E6]"
         >
           <h1 className="font-bold text-[20px]">Login</h1>
           <button onClick={() => setOpenLogin(!openLogin)}>
             <IoClose />
           </button>
         </div>
+
         <div
           id="body"
-          className=" bg-white h-[190px] w-[270px] flex items-center justify-center"
+          className=" bg-white h-[190px] w-[270px] flex items-center justify-center "
         >
           {isAdmin ? (
             <AdminLogin
@@ -96,23 +106,24 @@ export default function Login({
             />
           ) : (
             <button
-              className="bg-[#ED4627] rounded-full w-60 items-center flex p-5 gap-2 justify-center "
+              className="bg-[#ED4627] rounded-full w-60 items-center flex p-2 gap-2 justify-center "
               onClick={() => loginAZURE()}
             >
-              <SiMicrosoftoffice className="text-[20px] text-white" />
-              <label className="font-semibold text-[15px] text-white">
-                {" "}
-                Office 365 Login
+              <SiMicrosoftoffice className="text-[25px] text-white" />
+              <label className="font-semibold text-[25px] text-white">
+                <span className="font-semibold text-lg text-white hover:text-black ">
+                  365 Login
+                </span>
               </label>
             </button>
           )}
         </div>
         <div
           id="footer"
-          className=" hover:underline hover:text-black relative rounded-b-md select-none px-3 overflow-hidden flex justify-between items-center bg-[#3C91E6] "
+          className=" hover:text-black  text-white relative rounded-b-md select-none px-3 overflow-hidden flex justify-center items-center bg-[#3C91E6] "
         >
-          <a onClick={() => setAdmin(!isAdmin)} className=" p-2">
-            Login as admin
+          <a onClick={() => setAdmin(!isAdmin)} className=" p-2 cursor-pointer">
+            {isAdmin ? "Login with Office 365" : "Login as admin"}
           </a>
         </div>
       </div>

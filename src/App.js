@@ -7,8 +7,7 @@ import Dashboard from "./components/Dashboard";
 import Progress from "./components/Progress";
 import Activity from "./components/Activity";
 import Import from "./components/Import";
-import Login from "./components/Login";
-//import AdminPages from "./components/AdminPages/Admin";
+import { Login } from "./components/Login";
 import supabase from "./supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import UserRoleCreation from "./components/UserRoleCreation";
@@ -16,9 +15,11 @@ import UserRoleCreation from "./components/UserRoleCreation";
 export default function App({ msalinstance }) {
   const [openMenu, setOpenMenu] = useState(false);
   const [user, setUser] = useState();
-  const [userAzure, setUserAzure] = useState(null);
+  const [userAzure, setUserAzure] = useState({});
   const [adminRole, setAdminRole] = useState(false);
   const [accountsInfo, setAccountsInfo] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
+  var loginResponse;
 
   useEffect(() => {
     tokenChecker();
@@ -26,7 +27,7 @@ export default function App({ msalinstance }) {
       .channel("custom-all-channel")
       .on(
         "postgres_changes",
-        { event: "*", schema: "public", table: "accounts" },
+        { event: "UPDATE", schema: "public", table: "accounts" },
         (payload) => {
           tokenChecker();
         }
@@ -34,20 +35,32 @@ export default function App({ msalinstance }) {
       .subscribe();
   }, []);
 
+
+
+  const userName = async (info) => {
+    const { data: accounts } = await supabase
+      .from("accounts")
+      .select()
+      .eq("accessToken", window.localStorage.getItem("susi"));
+
+    console.log(accounts);
+    return;
+  };
+
   async function tokenChecker() {
     const { data: accounts } = await supabase.from("accounts").select();
+    userName();
     for (let index = 0; index < accounts.length; index++) {
-      if (window.localStorage.getItem("susi") === accounts[index].accessToken) {
+      if (accounts[index].accessToken === window.localStorage.getItem("susi")) {
         setUser(accounts[index].role);
-        return;
-      }
-      if (window.localStorage.getItem("susi") !== accounts[index].accessToken) {
-        window.localStorage.clear();
-        setUser(false);
-
+        setLoggedIn(true)
         return;
       }
     }
+    window.localStorage.clear();
+    setUser(false);
+
+    return;
   }
   console.log(user);
   return (
@@ -63,6 +76,8 @@ export default function App({ msalinstance }) {
           user={user}
           setAdminRole={setAdminRole}
           uuidv4={uuidv4()}
+          setLoggedIn={setLoggedIn}
+          loggedIn={loggedIn}
         />
         <div
           className={`${
@@ -71,28 +86,35 @@ export default function App({ msalinstance }) {
               : "w-0 hidden h-screen transition-transform duration-200"
           }`}
         >
-          {user && <SideBar openMenu={openMenu} user={user} />}
+          
+           <SideBar
+            openMenu={openMenu}
+            user={user}
+            msalinstance={msalinstance}
+            loginResponse={loginResponse}
+            adminRole={adminRole}
+          /> 
         </div>
 
         <div className="mt-12 z-0">
-          {adminRole && (
-            <Routes>
-              <Route path="/activity" element={<Activity />} />
-            </Routes>
-          )}
-
-
+          <Routes>
+            <Route path="/activity" element={<Activity />} />
+          </Routes>
 
           <Routes>
-            {/* <Route path="/Admin" element={<AdminPages />} /> */}
-            <Route path="/userrole" element={<UserRoleCreation />} />
             <Route path="/import" element={<Import />} />
             <Route path="/progress" element={<Progress />} />
             <Route path="/" element={<Dashboard />} />
             <Route
               path="/Login"
-              element={<Login msalinstance={msalinstance} />}
+              element={
+                <Login
+                  msalinstance={msalinstance}
+                  loginResponse={loginResponse}
+                />
+              }
             />
+            <Route path="/userrole" element={<UserRoleCreation />} />
           </Routes>
         </div>
       </div>
