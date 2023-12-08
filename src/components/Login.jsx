@@ -15,6 +15,7 @@ export function Login({
   setLoggedIn,
   setAdminRole,
   uuidv4,
+  userName
 }) {
   const [userData, setUserData] = useState();
   const [isAdmin, setAdmin] = useState(false);
@@ -35,6 +36,7 @@ export function Login({
         setUser(fetchAccount[index].role);
         nameChecker(loginResponse.account);
         setLoggedIn(true)
+        userName();
         return;
       }
     }
@@ -103,6 +105,7 @@ export function Login({
               openLogin={openLogin}
               setAdminRole={setAdminRole}
               setUser={setUser}
+              setLoggedIn={setLoggedIn}
             />
           ) : (
             <button

@@ -14,11 +14,8 @@ const UserRoleCreation = () => {
   //*Handle onchange of inputs
   function handleChange(e) {
     setFormData((prevForm) => ({
-      //return{
       ...prevForm,
       [e.target.name]: e.target.value,
-      //};
-
     }));
   }
 

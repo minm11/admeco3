@@ -16,8 +16,11 @@ export default function NavBar({
   setLoggedIn,
   loggedIn,
   uuidv4,
+  UserName,
+  userName,
 }) {
   const [openLogin, setOpenLogin] = useState(false);
+  
 
   return (
     <div
@@ -46,28 +49,12 @@ export default function NavBar({
         )}
       </div>
 
-      {/*
-      searchbar
-       <div className="flex">
-        <div
-          id="searchbarcontainer"
-          className="bg-white rounded-l-full flex justify-between h-9"
-        >
-          <input
-            id="searchbar"
-            className="rounded-l-full border-0 text-sm outline-none w-96 mx-5"
-            placeholder="Search..."
-            type="text"
-          />
-        </div>
-        <div className="bg-yellow-400  rounded-r-full text-sm flex items-center p-2 h-9">
-          <AiOutlineSearch id="icon" className="text-[20px]" />
-        </div> 
-      </div> */}
+      
+      
 
       <div className="flex items-center gap-2 cursor-pointer mr-4">
         <div className="flex items-center gap-1 opacity-90 md:text-base text-[11px]">
-          <h1>example name</h1>
+          <h1>{UserName} </h1>
         </div>
 
         {!loggedIn && (
@@ -75,8 +62,10 @@ export default function NavBar({
             onClick={() => {
               setOpenLogin(!openLogin);
             }}
-            className="md:h-10 md:w-10 h-8 w-8 rounded-full text-sm hover:ring-2 hover:ring-white bg-white"
-          ></div>
+            className=" h-8 w-14 rounded-full text-center pt-1 border-solid border-black text-sm hover:ring-2 hover:ring-white bg-green-400"
+          >
+            Login
+          </div>
         )}
 
         <Login
@@ -88,6 +77,7 @@ export default function NavBar({
           setAdminRole={setAdminRole}
           setLoggedIn={setLoggedIn}
           uuidv4={uuidv4}
+          userName={userName}
         />
       </div>
     </div>

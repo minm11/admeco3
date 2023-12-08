@@ -1,9 +1,42 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BiChevronRight } from "react-icons/bi";
-
 import { BsCalendar2MinusFill } from "react-icons/bs";
+import supabase from "../supabaseClient";
+
+
 export default function Activity() {
+  const [activities, setActivities] = useState([]);
+
+  //*Read account data
+  async function activityData() {
+    const { data, error } = await supabase.from("activity").select("*");
+    try {
+      if (error) throw error;
+      else {
+        setActivities(data);
+        console.log("Success >_< ");
+      }
+    } catch (error) {
+      console.error("Error", error.message);
+    }
+  }
+
+  //*Realtime Reading of Data
+  useEffect(() => {
+    activityData();
+    supabase
+      .channel("room2")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "activity" },
+        () => {
+          activityData();
+        }
+      )
+      .subscribe();
+  }, []);
+
   return (
     <div id="main" className="  pt-9 pb-28 px-5 font-lato mt-7 max-h-screen  fixed w-[60%] ">
       <div
@@ -34,7 +67,7 @@ export default function Activity() {
               <thead>
                 <tr className="border-b-[1px]  flex  gap-[200px]">
                   <th className="pb-1 pl-8 text-sm text-left bottom-1 border-solid border-[#eee]">
-                    UserName
+                      UserName
                   </th>
                   <th className="pb-1 text-sm text-left bottom-1 border-solid border-[#eee]">
                     TimeClicked
@@ -44,44 +77,19 @@ export default function Activity() {
                   </th>
                 </tr>
               </thead>
+              {activities.map((activity) => (
               <ul className="mt-2 ">
                 <li className="border-x-2 mb-5 bg-[#eee] rounded-lg px-6 py-6  flex gap-20">
                   <div className="flex items-center">
                     <BsCalendar2MinusFill className="text-[#ff0000]" />
-                  <h1 className="ml-4">teacher name</h1>
+                  <h1 className="ml-4">{activity.user}</h1>
                   </div>
                   
-                  <h1>November 15, 2023 2:08 AM</h1>
-                  <h1>imported a report</h1>
-                </li>
-                <li className="border-x-2 mb-5 bg-[#eee] rounded-lg px-6 py-6  flex gap-20">
-                  <div className="flex items-center">
-                    <BsCalendar2MinusFill className="text-[#ff0000]" />
-                  <h1 className="ml-4">teacher name</h1>
-                  </div>
-                  
-                  <h1>November 15, 2023 2:08 AM</h1>
-                  <h1>imported a report</h1>
-                </li>
-                <li className="border-x-2 mb-5 bg-[#eee] rounded-lg px-6 py-6  flex gap-20">
-                  <div className="flex items-center">
-                    <BsCalendar2MinusFill className="text-[#ff0000]" />
-                  <h1 className="ml-4">teacher name</h1>
-                  </div>
-                  
-                  <h1>November 15, 2023 2:08 AM</h1>
-                  <h1>imported a report</h1>
-                </li>
-                <li className="border-x-2 mb-5 bg-[#eee] rounded-lg px-6 py-6  flex gap-20">
-                  <div className="flex items-center">
-                    <BsCalendar2MinusFill className="text-[#ff0000]" />
-                  <h1 className="ml-4">teacher name</h1>
-                  </div>
-                  
-                  <h1>November 15, 2023 2:08 AM</h1>
-                  <h1>imported a report</h1>
+                  <h1>{activity.dateTime}</h1>
+                  <h1>{activity.act}</h1>
                 </li>
               </ul>
+              ))}
             </div>
           </div>
       </div>

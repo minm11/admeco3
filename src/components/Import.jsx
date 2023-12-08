@@ -3,20 +3,50 @@ import { Link } from "react-router-dom";
 import { BiChevronRight } from "react-icons/bi";
 import * as XLSX from "xlsx";
 import supabase from "../supabaseClient";
+import moment from "moment/moment";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { v4 as uuidv4 } from "uuid";
 
-export default function Import() {
+export default function Import(UserName, handleButtonClick) {
   // onchange states
   const [excelFile, setExcelFile] = useState(null);
   const [typeError, setTypeError] = useState(null);
+  const [Course, setCourse] = useState("");
+
   // submit state
   const [excelData, setExcelData] = useState(null);
-  const [date, setDate] = useState();
-  const [isOpen, setIsOpen] = useState(false);
+  const [file, setFile] = useState();
 
-  //new
-  // const [dueDate, setDueDate] = useState(null);
+  const downloadTemp = async () => {
+    window.open(
+      "https://ejgdplrjgnbwghgjkxlg.supabase.co/storage/v1/object/sign/template/Excel-adsr.xlsx?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZW1wbGF0ZS9FeGNlbC1hZHNyLnhsc3giLCJpYXQiOjE3MDE5OTg2ODUsImV4cCI6MTczMzUzNDY4NX0.8fGholdx8u2Av5zNMFKc42YZ01Ao5NR6HbOcjNF_nxw&t=2023-12-08T01%3A24%3A43.044Z"
+    );
+  };
+
+  //teacher name muna para sa kung sino nag send tapos file name ganon
+  const uploadExcel = async () => {
+    try {
+      const { data, error } = await supabase.storage
+        .from("Excelfile")
+        .upload(UserName.UserName + "/" + Course + "/" + file.name, file);
+
+      await supabase
+        .from("filename")
+        .insert([
+          { filename: file.name, username: UserName.UserName, course: Course },
+        ])
+        .select();
+
+      if (error) {
+        alert("Error uploading file: " + error.message);
+      } else {
+        alert("File uploaded successfully: " + JSON.stringify(data));
+      }
+    } catch (e) {
+      alert("Error during file upload: " + e.message);
+    }
+  };
 
   const handleFile = async (e) => {
     let fileTypes = [
@@ -27,6 +57,7 @@ export default function Import() {
     // let fileTypes = [".xls", ".xlsx", ".csv"];
     let selectedFile = e.target.files[0];
     if (selectedFile) {
+      setFile(selectedFile);
       if (selectedFile && fileTypes.includes(selectedFile.type)) {
         setTypeError(null);
         let reader = new FileReader();
@@ -56,7 +87,7 @@ export default function Import() {
 
       for (let index = 0; index < data.length; index++) {
         var a = data[index];
-        if (a["LAST NAME"]) {
+        if (a["STUDENT NUMBER"]) {
           break;
         } else {
           alert("INVALID FILE");
@@ -67,10 +98,27 @@ export default function Import() {
     }
   };
 
+  //basta sending ng data sa supa
+  const HandleUploadActivity = async () => {
+    const { data, error } = await supabase.from("activity").insert({
+      user: UserName.UserName,
+      // dateTime: moment(new Date()).from("LLL"),
+      dateTime: moment().format("LLL"),
+      act: "imported a report",
+    });
+
+    if (error) {
+      console.log(error);
+    } else if (data) {
+      console.log(data);
+    }
+  };
+
   const HandleUploadData = async () => {
     for (let index = 0; index < excelData.length; index++) {
       var a = excelData[index];
       const { error } = await supabase.from("StudentInformation").insert({
+        studentNumber: a["STUDENT NUMBER"],
         name: a["LAST NAME"] + " " + a["FIRST NAME"],
         program: a["PROGRAM"],
         subject: a["SUBJECT"],
@@ -80,17 +128,15 @@ export default function Import() {
         noAbsent: a["NO. OF DAYS ABSENT"],
         grade: a["GRADE"],
         otherConcerns: a["OTHER CONCERNS"],
-        
-         //new
-        // dueDate: dueDate, for dueDate 
+        term: a["TERM"],
+        //new
+        // dueDate: dueDate, for dueDate
       });
-
-      console.log(error);
     }
+    alert("File uploaded successfully: ");
   };
-  
-  const [selectedDate, setSelectedDate] = useState(new Date());
 
+  const [selectedDate, setSelectedDate] = useState(new Date());
 
   // DESIGN
   return (
@@ -102,8 +148,6 @@ export default function Import() {
         id="headTitle"
         className="flex items-center justify-between gap-16 flex-wrap"
       >
-
-      
         <div id="container left ">
           <h1 className="text-4xl font-semibold mb-2 pt-5 text-black">
             Import
@@ -119,40 +163,68 @@ export default function Import() {
           </div>
         </div>
 
-
-
-       
-        <div>
-          <button
-          id="container right"
-          className="h-9 bg-[#F9F9F9] border-2 items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
-          onclick={() => setIsOpen((prev) => !prev)}
+        {/* testing download from bucket */}
+        <button
+          onClick={() => {
+            downloadTemp();
+          }}
+          className="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-black"
         >
-          <h1 className=" text-black">set Due Date</h1>
+          Download Template
         </button>
-        <input type="date"></input>
+      </div>
+
+      <div className="mt-10 flex gap-3 gap-x-4 mb-5">
+        {/* lagyan mo course design */}
+        <div className="grid">
+          Select Course
+          <select
+            onChange={(e) => setCourse(e.target.value)}
+            value={Course}
+            className="p-3 bg-slate-200"
+          >
+            <option value=""></option>
+            <option value="BSIT">BSIT</option>
+            <option value="BSAIS">BSAIS</option>
+            <option value="BSHM">BSHM</option>
+            <option value="BSCS">BSCS</option>
+            <option value="BSTM">BSTM</option>
+            <option value="BSCE">BSCE</option>
+          </select>
         </div>
 
+        {/* set activity */}
 
+        {Course !== "" && (
+          <div className="flex gap-2 items-center">
+            <div className="grid">
+              {" "}
+              <label>Select input file</label>
+              <input
+                onClick={() => setExcelData() && setExcelFile()}
+                accept=".xlsx,.cvc"
+                type="file"
+                className=" border border-gray-300 p-2"
+                required
+                onChange={handleFile}
+              />
+            </div>
 
-      </div>
-      <div className="mt-10 flex gap-3 mb-5">
-        <input
-          onClick={() => setExcelData() && setExcelFile()}
-          accept=".xlsx,.cvc"
-          type="file"
-          className=" border border-gray-300 p-2 mb-1"
-          required
-          onChange={handleFile}
-        />
-        {excelData && excelData.length >= 0 && (
-          <button
-            onClick={() => HandleUploadData()}
-            className="bg-green-500 text-white  py-2 px-6 rounded-md hover:bg-black"
-          >
-            SUPABASE
-          </button>
+            {excelData && excelData.length >= 0 && (
+              <button
+                onClick={() => {
+                  HandleUploadData();
+                  uploadExcel(excelFile);
+                  HandleUploadActivity();
+                }}
+                className="bg-green-500 text-white mt-6   h-12 px-6 rounded-md hover:bg-black"
+              >
+                Upload
+              </button>
+            )}
+          </div>
         )}
+
         {typeError && (
           <div className="alert alert-danger " role="alert">
             {typeError}
@@ -162,49 +234,73 @@ export default function Import() {
 
       <div id="view data">
         {excelData && excelData.length >= 0 ? (
-          <div className="table-container overflow-y-auto max-h-96">
+          <div
+            className="table-container overflow-y-auto 
+          "
+          >
             <div className="table responsive">
-              <div className="  w-full max-h-[350px]  overflow-auto bg-slate-400 p-2 rounded-md shadow-md">
-                <div className="grid grid-cols-11 gap-y-5 gap-x-3 p-1 text-[12px] ">
-                  <div className="">NO.</div>
-                  <div className=""> LAST NAME</div>
-                  <div className=""> FIRST NAME</div>
-                  <div className=""> PROGRAM</div>
-                  <div className=""> SUBJECT</div>
-                  <div className=""> SECTION</div>
-
-                  <div className=""> NO. OF MEETINGS</div>
-                  <div className=""> NO. OF DAYS LATE</div>
-                  <div className=""> NO. OF DAYS ABSENT</div>
-                  <div className=""> GRADE</div>
-
-                  <div className=""> OTHER CONCERNS</div>
-                </div>
-
-                {excelData.map((data, index) => (
-                  <div
-                    key={index}
-                    className="grid grid-cols-11 bg-slate-200 mt-2 "
-                  >
-                    <div className=""> {data["NO."]}</div>
-                    <div className="">{data["LAST NAME"]}</div>
-                    <div className="">{data["FIRST NAME"]}</div>
-                    <div className="">{data["PROGRAM"]}</div>
-                    <div className="">{data["SUBJECT"]}</div>
-                    <div className="">{data["SECTION"]}</div>
-                    <div className="">{data["NO. OF MEETINGS"]}</div>
-                    <div className="">{data["NO. OF DAYS LATE"]}</div>
-                    <div className="">{data["NO. OF DAYS ABSENT"]}</div>
-                    <div className="">{data["GRADE"]}</div>
-                    <div className="">{data["OTHER CONCERNS"]}</div>
-                  </div>
-                ))}
+              <div className="  w-full max-h-[370px]  overflow-auto bg-slate-400 p-2 rounded-md shadow-md">
+                <table className="w-full table-fixed text-[12px]  ">
+                  <thead>
+                    <tr className="bg-slate-300">
+                      <th className="w-[5%] pr-8 border ">NO.</th>
+                      <th className="w-[10%] pr-4 border  ">STUDENT NUMBER</th>
+                      <th className="w-[10%] pr-1 border ">LAST NAME</th>
+                      <th className="w-[10%] pr-1 border ">FIRST NAME</th>
+                      <th className="w-[10%] pr-1 border ">PROGRAM</th>
+                      <th className="w-[10%] pr-1 border ">SUBJECT</th>
+                      <th className="w-[10%] pr-1 border ">SECTION</th>
+                      <th className="w-[5%]  border ">NO. OF MEETINGS</th>
+                      <th className="w-[5%]  border ">NO. OF DAYS LATE</th>
+                      <th className="w-[5%]  border ">NO. OF DAYS ABSENT</th>
+                      <th className="w-[5%]  border ">GRADE</th>
+                      <th className="w-[10%]  border ">OTHER CONCERNS</th>
+                      <th className="w-[10%] p-4 border ">TERM</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {excelData.map((data, index) => (
+                      <tr key={index} className="bg-slate-200">
+                        <td className="w-[5%] p-3 ">{data["NO."]}</td>
+                        <td className="w-[10%] p-7 ">
+                          {data["STUDENT NUMBER"]}
+                        </td>
+                        <td className="w-[10%] p-10  ">{data["LAST NAME"]}</td>
+                        <td className="w-[10%] p-10 ">{data["FIRST NAME"]}</td>
+                        <td className="w-[10%] p-12 ">{data["PROGRAM"]}</td>
+                        <td className="w-[10%] p-10 ">{data["SUBJECT"]}</td>
+                        <td className="w-[10%] p-12 ">{data["SECTION"]}</td>
+                        <td className="w-[5%] p-8 ">
+                          {data["NO. OF MEETINGS"]}
+                        </td>
+                        <td className="w-[5%] p-8 ">
+                          {data["NO. OF DAYS LATE"]}
+                        </td>
+                        <td className="w-[5%] p-8 ">
+                          {data["NO. OF DAYS ABSENT"]}
+                        </td>
+                        <td className="w-[5%] p-7 ">{data["GRADE"]}</td>
+                        <td className="w-[10%] p-7 ">
+                          {data["OTHER CONCERNS"]}
+                        </td>
+                        <td className="w-[10%] p-12">{data["TERM"]}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center h-48">
             <>
+              {Course == "" && (
+                <>
+                  <div className="text-gray-500 mb-4">
+                    Please select a Course before selecting file.
+                  </div>
+                </>
+              )}
               {excelFile === null ? (
                 <div className="text-gray-500 mb-4">Please upload a file.</div>
               ) : (
@@ -216,18 +312,6 @@ export default function Import() {
           </div>
         )}
       </div>
-
-
-      
     </div>
-
-
   );
-}
-
-
-{
-  /* {Object.keys(individualExcelData).map((key) => (
-                      <td key={key}>{individualExcelData[key]}</td>
-                    ))} */
 }

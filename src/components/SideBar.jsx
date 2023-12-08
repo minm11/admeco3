@@ -5,12 +5,14 @@ import { PiClipboardTextBold, PiReadCvLogoFill } from "react-icons/pi";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import { FaBarsProgress, FaFileImport } from "react-icons/fa6";
 import { CgLogOut } from "react-icons/cg";
+import { LuDatabaseBackup } from "react-icons/lu";
 
 export default function SideBar({
   user,
   loginResponse,
   msalinstance,
   adminRole,
+  setAdminRole,
 }) {
   console.log(user + "ilibin");
   const [isOpen, setIsOpen] = useState(false);
@@ -19,6 +21,7 @@ export default function SideBar({
     try {
       window.location.reload();
       window.localStorage.clear();
+      alert("logged out");
     } catch (error) {
       console.error("Logout error:", error);
     }
@@ -53,17 +56,41 @@ export default function SideBar({
             </Link>
           )}
 
-          <Link to="/Import" className=" ">
+          {user === "teacher" && (
+            <Link to="/Import" className=" ">
+              <li
+                id="active"
+                className="h-9 bg-[#F9F9F9]  items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
+              >
+                <FaFileImport id="icon Import" className="" />
+                <h1 className="ml-4"> Import</h1>
+              </li>
+            </Link>
+          )}
+
+          {user === "guidance" && (
+            <Link to="/importGuidance" className=" ">
+              <li
+                id="active"
+                className="h-9 bg-[#F9F9F9]  items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
+              >
+                <FaFileImport id="icon Import" className="" />
+                <h1 className="ml-4"> Import </h1>
+              </li>
+            </Link>
+          )}
+
+          <Link to="/Restore" className=" ">
             <li
               id="active"
               className="h-9 bg-[#F9F9F9]  items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6]"
             >
-              <FaFileImport id="icon Import" className="" />
-              <h1 className="ml-4"> import</h1>
+              <LuDatabaseBackup id="icon Import" className="" />
+              <h1 className="ml-4"> Restore</h1>
             </li>
           </Link>
 
-          {(adminRole || user === "admin") && (
+          {/* {(adminRole || user === "admin") && (
             <button
               id="active"
               className="h-9 bg-[#F9F9F9] items-center  rounded-full w-[97%] mx-2 mb-3 flex hover:text-[#3C91E6]"
@@ -73,11 +100,13 @@ export default function SideBar({
               <h1 className="ml-4">Logs</h1>
               {!isOpen ? <AiFillCaretDown /> : <AiFillCaretUp />}
             </button>
-          )}
+          )} */}
 
-          {isOpen && (
+          {/* {isOpen && ( */}
+          {(adminRole || user === "admin") && (
             <>
               {/* role ng ni admin */}
+
               <Link to="/activity" className="">
                 <li
                   id="active"
