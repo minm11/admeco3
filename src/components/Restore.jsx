@@ -3,6 +3,9 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { BiChevronRight } from "react-icons/bi";
 
+
+
+
 const Restore = ({ username }) => {
   const [files, setFiles] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -28,7 +31,7 @@ const Restore = ({ username }) => {
         console.log(files);
       }
     };
-
+    console.log(files);
     fetchFiles();
   }, []);
 
