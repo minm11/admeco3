@@ -1,17 +1,23 @@
 {
   "files": {
-    "main.css": "/admeco3/static/css/main.0f387c10.css",
-    "main.js": "/admeco3/static/js/main.a955f98e.js",
-    "static/js/839.0ea319e6.chunk.js": "/admeco3/static/js/839.0ea319e6.chunk.js",
+    "main.css": "/admeco3/static/css/main.6650b04f.css",
+    "main.js": "/admeco3/static/js/main.ccb977b7.js",
+    "static/js/703.52df2f7e.chunk.js": "/admeco3/static/js/703.52df2f7e.chunk.js",
+    "static/js/198.6c00742e.chunk.js": "/admeco3/static/js/198.6c00742e.chunk.js",
+    "static/js/839.77b07a13.chunk.js": "/admeco3/static/js/839.77b07a13.chunk.js",
+    "static/media/newsti_logo.png": "/admeco3/static/media/newsti_logo.a1d3caed597d90c1bfc3.png",
     "static/media/Lato-Regular.ttf": "/admeco3/static/media/Lato-Regular.9d883d540ee2b4de8024.ttf",
-    "static/media/sti_logo.png": "/admeco3/static/media/sti_logo.ebaad33ac7796ae0639c.png",
+    "static/media/bg.png": "/admeco3/static/media/bg.9b948f241dbb7165df24.png",
+    "static/media/bgall.jpg": "/admeco3/static/media/bgall.805159cc61c32b31dbe2.jpg",
     "index.html": "/admeco3/index.html",
-    "main.0f387c10.css.map": "/admeco3/static/css/main.0f387c10.css.map",
-    "main.a955f98e.js.map": "/admeco3/static/js/main.a955f98e.js.map",
-    "839.0ea319e6.chunk.js.map": "/admeco3/static/js/839.0ea319e6.chunk.js.map"
+    "main.6650b04f.css.map": "/admeco3/static/css/main.6650b04f.css.map",
+    "main.ccb977b7.js.map": "/admeco3/static/js/main.ccb977b7.js.map",
+    "703.52df2f7e.chunk.js.map": "/admeco3/static/js/703.52df2f7e.chunk.js.map",
+    "198.6c00742e.chunk.js.map": "/admeco3/static/js/198.6c00742e.chunk.js.map",
+    "839.77b07a13.chunk.js.map": "/admeco3/static/js/839.77b07a13.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.0f387c10.css",
-    "static/js/main.a955f98e.js"
+    "static/css/main.6650b04f.css",
+    "static/js/main.ccb977b7.js"
   ]
 }
