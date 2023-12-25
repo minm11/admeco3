@@ -1,0 +1,36 @@
+/* Sidebar.css */
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 200px; /* Adjust as needed */
+    background-color: #333; /* Adjust as needed */
+    color: white; /* Adjust as needed */
+    overflow: hidden;
+    transition: transform 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px; /* Adjust as needed */
+  }
+  
+  .arrow {
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent; /* Adjust as needed */
+    border-right: 10px solid transparent; /* Adjust as needed */
+    border-bottom: 10px solid white; /* Adjust as needed */
+    margin-bottom: 10px; /* Adjust as needed */
+    transition: margin-bottom 0.3s ease-in-out;
+  }
+  
+  .sidebar.open {
+    transform: translateX(0);
+  }
+  
+  .sidebar.open .arrow {
+    margin-bottom: 0;
+  }
+
+  

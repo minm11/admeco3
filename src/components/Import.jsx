@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BiChevronRight } from "react-icons/bi";
 import * as XLSX from "xlsx";
@@ -20,16 +20,37 @@ export default function Import(UserName, handleButtonClick) {
 
   const downloadTemp = async () => {
     window.open(
-      "https://ejgdplrjgnbwghgjkxlg.supabase.co/storage/v1/object/sign/template/Excel-adsr.xlsx?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZW1wbGF0ZS9FeGNlbC1hZHNyLnhsc3giLCJpYXQiOjE3MDE5OTg2ODUsImV4cCI6MTczMzUzNDY4NX0.8fGholdx8u2Av5zNMFKc42YZ01Ao5NR6HbOcjNF_nxw&t=2023-12-08T01%3A24%3A43.044Z"
+      "https://ejgdplrjgnbwghgjkxlg.supabase.co/storage/v1/object/sign/template/Excel-adsr.xlsx?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ0ZW1wbGF0ZS9FeGNlbC1hZHNyLnhsc3giLCJpYXQiOjE3MDM0MTczNjIsImV4cCI6MTc5ODAyNTM2Mn0.zfe-V6yD4R5QqHr8jvkXkNDy0L3pqFhVpEDHI7Z-3WI&t=2023-12-24T11%3A29%3A21.544Z"
     );
   };
 
   //teacher name muna para sa kung sino nag send tapos file name ganon
   const uploadExcel = async () => {
     try {
+      // Check if the file already exists in Supabase storage
+      const { data: existingFiles, error: existingFilesError } =
+        await supabase.storage
+          .from("Excelfile")
+          .list(`${UserName.UserName}/${Course}`);
+
+      if (existingFilesError) {
+        alert("Error checking existing files: " + existingFilesError.message);
+        return;
+      }
+
+      const fileExists = existingFiles.some(
+        (fileInfo) => fileInfo.name === file.name
+      );
+
+      if (fileExists) {
+        alert("File already exists in the storage. Aborting upload.");
+        return;
+      }
+
+      // Continue with the file upload
       const { data, error } = await supabase.storage
         .from("Excelfile")
-        .upload(UserName.UserName + "/" + Course + "/" + file.name, file);
+        .upload(`${UserName.UserName}/${Course}/${file.name}`, file);
 
       await supabase
         .from("filename")
@@ -98,13 +119,11 @@ export default function Import(UserName, handleButtonClick) {
     }
   };
 
-  //basta sending ng data sa supa
   const HandleUploadActivity = async () => {
     const { data, error } = await supabase.from("activity").insert({
       user: UserName.UserName,
-      // dateTime: moment(new Date()).from("LLL"),
       dateTime: moment().format("LLL"),
-      act: "imported a report",
+      act: "Imported a Excel Report",
     });
 
     if (error) {
@@ -115,25 +134,70 @@ export default function Import(UserName, handleButtonClick) {
   };
 
   const HandleUploadData = async () => {
-    for (let index = 0; index < excelData.length; index++) {
-      var a = excelData[index];
-      const { error } = await supabase.from("StudentInformation").insert({
-        studentNumber: a["STUDENT NUMBER"],
-        name: a["LAST NAME"] + " " + a["FIRST NAME"],
-        program: a["PROGRAM"],
-        subject: a["SUBJECT"],
-        section: a["SECTION"],
-        noMeeting: a["NO. OF MEETINGS"],
-        noLate: a["NO. OF DAYS LATE"],
-        noAbsent: a["NO. OF DAYS ABSENT"],
-        grade: a["GRADE"],
-        otherConcerns: a["OTHER CONCERNS"],
-        term: a["TERM"],
-        //new
-        // dueDate: dueDate, for dueDate
-      });
+    try {
+      // Check if the file already exists in Supabase storage
+      const { data: existingFiles, error: existingFilesError } =
+        await supabase.storage
+          .from("Excelfile")
+          .list(`${UserName.UserName}/${Course}`);
+
+      if (existingFilesError) {
+        alert("Error checking existing files: " + existingFilesError.message);
+        return;
+      }
+
+      const fileExists = existingFiles.some(
+        (fileInfo) => fileInfo.name === file.name
+      );
+
+      if (fileExists) {
+        return;
+      }
+
+      // Continue with the data upload
+      for (let index = 0; index < excelData.length; index++) {
+        var a = excelData[index];
+
+        const { error } = await supabase.from("StudentInformation").insert({
+          studentNumber: a["STUDENT NUMBER"],
+          name: a["LAST NAME"] + " " + a["FIRST NAME"],
+          program: a["PROGRAM"],
+          subject: a["SUBJECT"],
+          section: a["SECTION"],
+          noMeeting: a["NO. OF MEETINGS"],
+          noLate: a["NO. OF DAYS LATE"],
+          noAbsent: a["NO. OF DAYS ABSENT"],
+          grade: a["GRADE"],
+          reason: a["REASON"],
+          term: a["TERM"],
+          semester: a["SEMESTER"],
+          faculty: UserName.UserName,
+        });
+
+        if (error) {
+          alert("Error during data upload: " + error.message);
+          return false;
+        }
+      }
+
+      return true;
+    } catch (e) {
+      alert("Error during data upload: " + e.message);
+      return false;
     }
-    alert("File uploaded successfully: ");
+  };
+
+  const handleUpload = async () => {
+    try {
+      const dataUploadSuccess = await HandleUploadData();
+
+      if (dataUploadSuccess) {
+        await HandleUploadActivity();
+      }
+    } catch (e) {
+      // Handle the error or log it as needed
+      alert("Error during upload: " + e.message);
+    }
   };
 
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -153,7 +217,7 @@ export default function Import(UserName, handleButtonClick) {
             Import
           </h1>
           <div className="flex items-center justify-between mb-8 ">
-            <Link to="/" className="hover:text-[#3C91E6]">
+            <Link to="" className="hover:text-[#3C91E6]">
               Home
             </Link>
             <BiChevronRight id="icon iconchevronRight" className="mx-2" />
@@ -163,67 +227,54 @@ export default function Import(UserName, handleButtonClick) {
           </div>
         </div>
 
-        {/* testing download from bucket */}
-        <button
-          onClick={() => {
-            downloadTemp();
-          }}
-          className="bg-green-500 text-white py-2 px-6 rounded-md hover:bg-black"
-        >
-          Download Template
-        </button>
+        <div className="flex justify-between">
+          <button
+            onClick={() => {
+              downloadTemp();
+            }}
+            className="bg-green-500 text-white h-9 px-4 rounded-md hover:bg-black mb-3"
+          >
+            Download Template
+          </button>
+
+          <Link
+            to="/createreport"
+            className="text-green-500 hover:text-green-600"
+          >
+            <button className="bg-blue-500 text-white h-9 px-4 rounded hover:bg-blue-600 mb-3">
+              Back to Report Creation
+            </button>
+          </Link>
+        </div>
       </div>
 
       <div className="mt-10 flex gap-3 gap-x-4 mb-5">
-        {/* lagyan mo course design */}
-        <div className="grid">
-          Select Course
-          <select
-            onChange={(e) => setCourse(e.target.value)}
-            value={Course}
-            className="p-3 bg-slate-200"
-          >
-            <option value=""></option>
-            <option value="BSIT">BSIT</option>
-            <option value="BSAIS">BSAIS</option>
-            <option value="BSHM">BSHM</option>
-            <option value="BSCS">BSCS</option>
-            <option value="BSTM">BSTM</option>
-            <option value="BSCE">BSCE</option>
-          </select>
-        </div>
-
-        {/* set activity */}
-
-        {Course !== "" && (
-          <div className="flex gap-2 items-center">
-            <div className="grid">
-              {" "}
-              <label>Select input file</label>
-              <input
-                onClick={() => setExcelData() && setExcelFile()}
-                accept=".xlsx,.cvc"
-                type="file"
-                className=" border border-gray-300 p-2"
-                required
-                onChange={handleFile}
-              />
-            </div>
-
-            {excelData && excelData.length >= 0 && (
-              <button
-                onClick={() => {
-                  HandleUploadData();
-                  uploadExcel(excelFile);
-                  HandleUploadActivity();
-                }}
-                className="bg-green-500 text-white mt-6   h-12 px-6 rounded-md hover:bg-black"
-              >
-                Upload
-              </button>
-            )}
+        <div className="flex gap-2 items-center">
+          <div className="grid">
+            {" "}
+            <label>Select input file</label>
+            <input
+              onClick={() => setExcelData() && setExcelFile()}
+              accept=".xlsx,.cvc"
+              type="file"
+              className=" border border-gray-300 p-2"
+              required
+              onChange={handleFile}
+            />
           </div>
-        )}
+
+          {excelData && excelData.length >= 0 && (
+            <button
+              onClick={() => {
+                handleUpload();
+                uploadExcel(excelFile);
+              }}
+              className="bg-green-500 text-white mt-6 h-12 px-6 rounded-md hover:bg-black"
+            >
+              Upload
+            </button>
+          )}
+        </div>
 
         {typeError && (
           <div className="alert alert-danger " role="alert">
@@ -235,14 +286,13 @@ export default function Import(UserName, handleButtonClick) {
       <div id="view data">
         {excelData && excelData.length >= 0 ? (
           <div
-            className="table-container overflow-y-auto 
-          "
+            className="table-container overflow-y-auto"
           >
             <div className="table responsive">
-              <div className="  w-full max-h-[370px]  overflow-auto bg-slate-400 p-2 rounded-md shadow-md">
+              <div className="  w-full max-h-[350px]  overflow-auto bg-slate-400 p-2 rounded-md shadow-md">
                 <table className="w-full table-fixed text-[12px]  ">
                   <thead>
-                    <tr className="bg-slate-300">
+                    <tr className="bg-slate-300 ">
                       <th className="w-[5%] pr-8 border ">NO.</th>
                       <th className="w-[10%] pr-4 border  ">STUDENT NUMBER</th>
                       <th className="w-[10%] pr-1 border ">LAST NAME</th>
@@ -254,8 +304,9 @@ export default function Import(UserName, handleButtonClick) {
                       <th className="w-[5%]  border ">NO. OF DAYS LATE</th>
                       <th className="w-[5%]  border ">NO. OF DAYS ABSENT</th>
                       <th className="w-[5%]  border ">GRADE</th>
-                      <th className="w-[10%]  border ">OTHER CONCERNS</th>
+                      <th className="w-[10%]  border ">REASON</th>
                       <th className="w-[10%] p-4 border ">TERM</th>
+                      <th className="w-[10%] p-4 border ">SEMESTER</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -280,10 +331,9 @@ export default function Import(UserName, handleButtonClick) {
                           {data["NO. OF DAYS ABSENT"]}
                         </td>
                         <td className="w-[5%] p-7 ">{data["GRADE"]}</td>
-                        <td className="w-[10%] p-7 ">
-                          {data["OTHER CONCERNS"]}
-                        </td>
+                        <td className="w-[10%] p-7 ">{data["REASON"]}</td>
                         <td className="w-[10%] p-12">{data["TERM"]}</td>
+                        <td className="w-[10%] p-12">{data["SEMESTER"]}</td>
                       </tr>
                     ))}
                   </tbody>

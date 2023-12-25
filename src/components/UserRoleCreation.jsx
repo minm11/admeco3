@@ -10,7 +10,6 @@ const UserRoleCreation = () => {
   });
   const [Users, setUsers] = useState([]);
 
-  
   //*Handle onchange of inputs
   function handleChange(e) {
     setFormData((prevForm) => ({
@@ -25,7 +24,7 @@ const UserRoleCreation = () => {
     const { data, error } = await supabase
       .from("accounts")
       .insert([{ email: formData.email, role: formData.role }]);
-      
+
     try {
       if (error) throw error;
       else {
@@ -33,7 +32,7 @@ const UserRoleCreation = () => {
       }
     } catch (error) {
       alert("Error", error.message);
-      console.log("Error", error.message)
+      console.log("Error", error.message);
     }
   }
 
@@ -66,6 +65,25 @@ const UserRoleCreation = () => {
       .subscribe();
   }, []);
 
+  const [searchUpdate, setUpdate] = useState("");
+  const [searchDelete, setDelete] = useState("");
+  const [searchUpdateName, setUpdateName] = useState("");
+  const [searchDeleteName, setDeleteName] = useState("");
+
+  const filteredUsers = Users.filter(
+    (data) =>
+      data.role.toLowerCase().includes(searchUpdate.toLowerCase()) &&
+      data.email.toLowerCase().includes(searchUpdateName.toLowerCase())
+  );
+
+  const filteredDeleteUsers = Users.filter(
+    (data) =>
+      data.role.toLowerCase().includes(searchDelete.toLowerCase()) &&
+      data.email.toLowerCase().includes(searchDeleteName.toLowerCase())
+  );
+
+  
+
   return (
     <div className="min-h-screen flex items-center justify-center  w-screen gap-2">
       <div className="bg-white- p-8 rounded shadow-md shadow-black  w-full max-w-md bg-gray-300">
@@ -82,6 +100,7 @@ const UserRoleCreation = () => {
               className="border rounded px -2 py -1 w-full focus:outline-none focus:border-indigo-500"
             />
           </div>
+
           <div>
             <label className="text-gray-700">Role:</label>
             <select
@@ -111,28 +130,84 @@ const UserRoleCreation = () => {
         </form>
       </div>
 
-      <div className="bg-white- p-8 rounded shadow-md shadow-black w-full max-w-md bg-gray-300 ">
+      <div className="bg-white- p-8 rounded shadow-md shadow-black  w-full max-w-md bg-gray-300 ">
         <h1 className="text-xl mt-8 font-semibold mb-4 text-indigo-700 ">
           Updating Data
         </h1>
+
+        <div className="mb-4">
+          <label className="text-gray-700">Search by Role:</label>
+          <input
+            type="text"
+            value={searchUpdate}
+            onChange={(e) => setUpdate(e.target.value)}
+            className="border rounded px-2 py-1 w-full focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+
+        <div className="mb-4">
+          <label className="text-gray-700">Search by Email:</label>
+          <input
+            type="text"
+            value={searchUpdateName}
+            onChange={(e) => setUpdateName(e.target.value)}
+            className="border rounded px-2 py-1 w-full focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+
         <div className="max-h-[14rem] overflow-y-auto overflow-x-hidden">
-          {Users.map((data, i) => (
-            <UpdateRole handle={"Update"} key={i} data={data} i={i} />
+          {filteredUsers.map((data, i) => (
+            <div key={i} className="text-center bg-grey ">
+              <p
+                className="text-sm text-gray-600 mb-2"
+                style={{ fontSize: "18px" }}
+              >
+                Role: {data.role}
+              </p>
+              <UpdateRole handle={"Update"} data={data} i={i} />
+            </div>
           ))}
         </div>
       </div>
 
-      <div className="bg-white- p-8 rounded shadow-md shadow-black w-full max-w-md bg-gray-300 ">
+      <div className="bg-white- p-8 rounded shadow-md shadow-black  w-full max-w-md bg-gray-300 ">
         <h1 className="text-xl mt-8 font-semibold mb-4 text-indigo-700 ">
           Delete Data
         </h1>
+        <div className="mb-4">
+          <label className="text-gray-700">Search by Role:</label>
+          <input
+            type="text"
+            value={searchDelete}
+            onChange={(e) => setDelete(e.target.value)}
+            className="border rounded px-2 py-1 w-full focus:outline-none focus:border-indigo-500"
+          />
+        </div>
+        <div className="mb-4">
+          <label className="text-gray-700">Search by Email:</label>
+          <input
+            type="text"
+            value={searchDeleteName}
+            onChange={(e) => setDeleteName(e.target.value)}
+            className="border rounded px-2 py-1 w-full focus:outline-none focus:border-indigo-500"
+          />
+        </div>
         <div className="max-h-[14rem] overflow-y-auto overflow-x-hidden">
-          {Users.map((data, i) => (
-            <UpdateRole handle={"Delete"} key={i} data={data} i={i} />
+          {filteredDeleteUsers.map((data, i) => (
+            <div key={i} className="text-center bg-grey ">
+              <p
+                className="text-sm text-gray-600 mb-2"
+                style={{ fontSize: "18px" }}
+              >
+                Role: {data.role}
+              </p>
+              <UpdateRole handle={"Delete"} key={i} data={data} i={i} />
+            </div>
           ))}
         </div>
       </div>
     </div>
   );
 };
+
 export default UserRoleCreation;

@@ -1,25 +1,34 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, BrowserRouter, Routes } from "react-router-dom";
 import NavBar from "./components/NavBar";
 import SideBar from "./components/SideBar";
 import Dashboard from "./components/Dashboard";
 import Progress from "./components/Progress";
 import Activity from "./components/Activity";
 import Import from "./components/Import";
-import ImportGuidance from "./components/ImportGuidance";
+import SearchStudent from "./components/SearchStudent";
 import { Login } from "./components/Login";
 import supabase from "./supabaseClient";
 import { v4 as uuidv4 } from "uuid";
 import UserRoleCreation from "./components/UserRoleCreation";
 import Restore from "./components/Restore";
-//import { name } from "@azure/msal-browser/dist/packageMetadata";
+import Loginpage from "./components/Loginpage";
+import SetDeadline from "./components/SetDeadline";
+import ListImportFile from "./components/ListImportFile";
+import CreateReport from "./components/CreateReport";
+import DashboardTeacher from "./components/DashboardTeacher";
+import DashboardBlanks from "./components/DashboardBlanks";
+import ImportHistory from "./components/ImportHistory";
+import ReportStatus from "./components/ReportStatus";
 
 export default function App({ msalinstance }) {
   const [openMenu, setOpenMenu] = useState(false);
   const [user, setUser] = useState();
   const [userAzure, setUserAzure] = useState({});
   const [adminRole, setAdminRole] = useState(false);
+  const [teacherRole, setTeacherRole] = useState(false);
+  const [guidanceRole, setGuidanceRole] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [UserName, setUserName] = useState("");
   const [currentDate, setCurrentDate] = useState(null);
@@ -31,20 +40,6 @@ export default function App({ msalinstance }) {
     setCurrentDate(formattedDate);
   };
 
-  // //*Read account data
-  // async function activityData() {
-  //   const { data, error } = await supabase.from("activity").select("*");
-  //   try {
-  //     if (error) throw error;
-  //     else {
-  //       setActivityData(data);
-  //       console.log("Success >_< ");
-  //     }
-  //   } catch (error) {
-  //     console.error("Error", error.message);
-  //   }
-  // }
-
   // reads username then throw it where you want
   const userName = async (info) => {
     const { data: accounts, error } = await supabase
@@ -55,29 +50,15 @@ export default function App({ msalinstance }) {
     if (error) {
       console.error("Error", error.message);
     }
-    if (accounts) setUserName(accounts[0].name);
+    if (accounts) setUserName(accounts[0]?.name);
     return;
   };
-
-  useEffect(() => {
-    tokenChecker();
-    supabase
-      .channel("custom-all-channel")
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "accounts" },
-        (payload) => {
-          tokenChecker();
-        }
-      )
-      .subscribe();
-  }, []);
 
   async function tokenChecker() {
     if (window.localStorage.getItem("susi")) {
       const { data: accounts } = await supabase.from("accounts").select();
 
-      for (let index = 0; index < accounts.length; index++) {
+      for (let index = 0; index < accounts?.length; index++) {
         if (
           accounts[index].accessToken === window.localStorage.getItem("susi")
         ) {
@@ -93,8 +74,22 @@ export default function App({ msalinstance }) {
     }
   }
 
+  useEffect(() => {
+    tokenChecker();
+    supabase
+      .channel("custom-all-channel")
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "accounts" },
+        (payload) => {
+          tokenChecker();
+        }
+      )
+      .subscribe();
+  }, []);
+
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-screen  ">
       <div className=" overflow-hidden flex">
         <NavBar
           setOpenMenu={setOpenMenu}
@@ -105,17 +100,24 @@ export default function App({ msalinstance }) {
           setUserAzure={setUserAzure}
           user={user}
           setAdminRole={setAdminRole}
+          setGuidanceRole={setGuidanceRole}
+          setTeacherRole={setTeacherRole}
           uuidv4={uuidv4()}
           setLoggedIn={setLoggedIn}
           loggedIn={loggedIn}
           UserName={UserName}
           userName={userName}
         />
+
+        {loggedIn ? null : <Loginpage />}
+
         <div
+          onMouseEnter={() => setOpenMenu(true)}
+          onMouseLeave={() => setOpenMenu(false)}
           className={`${
             openMenu
-              ? "w-[280px] h-screen transition-transform duration-200 overflow-hidden"
-              : "w-0 hidden h-screen transition-transform duration-200"
+              ? "w-[190px] h-screen transition-transform duration-200 overflow-hidden "
+              : "w-0 hidden h-screen transition-transform duration-1000 ml-12"
           }`}
         >
           <SideBar
@@ -124,50 +126,115 @@ export default function App({ msalinstance }) {
             msalinstance={msalinstance}
             loginResponse={loginResponse}
             adminRole={adminRole}
-          />
+            teacherRole={teacherRole}
+            guidanceRole={guidanceRole}
+            UserName={UserName}
+            userName={userName}
+          >
+            {/* Render the logo and hide the name when openMenu is true */}
+            {openMenu ? <div>{/* Your logo component goes here */}</div> : null}
+          </SideBar>
         </div>
 
         <div className="mt-12 z-0">
           <Routes>
-            <Route path="/activity" element={<Activity />} />
-          </Routes>
+            {/* Check if the user is logged in */}
+            {loggedIn ? (
+              <>
 
-          <Routes>
-            <Route
-              path="/import"
-              element={
-                <Import
-                  UserName={UserName}
-                  userName={userName}
-                  currentDate={currentDate}
-                  handleButtonClick={handleButtonClick}
+              
+              
+              
+                <Route path="/activity" element={<Activity />} />
+
+                <Route
+                  path="/import"
+                  element={
+                    <Import
+                      UserName={UserName}
+                      userName={userName}
+                      currentDate={currentDate}
+                      handleButtonClick={handleButtonClick}
+                    />
+                  }
                 />
-              }
-            />
-            <Route
-              path="/importGuidance"
-              element={
-                <ImportGuidance
-                  UserName={UserName}
-                  userName={userName}
-                  currentDate={currentDate}
-                  handleButtonClick={handleButtonClick}
+                <Route path="/reportstatus" element={<ReportStatus/>}/>
+                <Route
+                  path="/searchstudent"
+                  element={
+                    <SearchStudent
+                      UserName={UserName}
+                      userName={userName}
+                      currentDate={currentDate}
+                      handleButtonClick={handleButtonClick}
+                    />
+                  }
                 />
-              }
-            />
-            <Route path="/progress" element={<Progress />} />
-            <Route path="/" element={<Dashboard />} />
-            <Route
-              path="/Login"
-              element={
-                <Login
-                  msalinstance={msalinstance}
-                  loginResponse={loginResponse}
+                <Route path="/progress" element={<Progress />} />
+                <Route path="/setdeadline" element={<SetDeadline />} />
+                <Route path="/" element={<Dashboard />} />
+                <Route
+                  path="/dashboardteacher"
+                  element={<DashboardTeacher />}
                 />
-              }
-            />
-            <Route path="/userrole" element={<UserRoleCreation />} />
-            <Route path="/restore" element={<Restore UserName={UserName} />} />
+
+                <Route path="/userrole" element={<UserRoleCreation />} />
+                <Route
+                  path="/dashboardblanks"
+                  element={
+                    <DashboardBlanks
+                      openMenu={openMenu}
+                      setOpenMenu={setOpenMenu}
+                    />
+                  }
+                />
+                <Route
+                  path="/restore"
+                  element={<Restore UserName={UserName} />}
+                />
+                <Route
+                  path="/importhistory"
+                  element={
+                    <ImportHistory
+                      UserName={UserName}
+                      userName={userName}
+                      currentDate={currentDate}
+                    />
+                  }
+                />
+
+                <Route path="/listimportfile" element={<ListImportFile />} />
+
+                <Route
+                  path="/createreport"
+                  element={
+                    <CreateReport
+                      UserName={UserName}
+                      userName={userName}
+                      currentDate={currentDate}
+                    />
+                  }
+                />
+              </>
+            ) : (
+              // Render the Login component if not logged in
+              <Route
+                path="/login"
+                element={
+                  <Login
+                    openMenu={openMenu}
+                    user={user}
+                    msalinstance={msalinstance}
+                    loginResponse={loginResponse}
+                    teacherRole={teacherRole}
+                    guidanceRole={guidanceRole}
+                    adminRole={adminRole}
+                    UserName={UserName}
+                    userName={userName}
+                  />
+                }
+              />
+            )}
           </Routes>
         </div>
       </div>

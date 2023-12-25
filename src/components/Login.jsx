@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import supabase from "../supabaseClient";
 import { loginRequest } from "./auth";
 import { SiMicrosoftoffice } from "react-icons/si";
-import { IoClose } from "react-icons/io5";
 import AdminLogin from "./AdminPages/AdminLogin";
+import { useNavigate } from "react-router-dom";
 
 export function Login({
   msalinstance,
@@ -14,12 +14,14 @@ export function Login({
   setUserAzure,
   setLoggedIn,
   setAdminRole,
+  setTeacherRole,
+  setGuidanceRole,
   uuidv4,
   userName
 }) {
   const [userData, setUserData] = useState();
-  const [isAdmin, setAdmin] = useState(false);
-
+  const [isOtherUser, setOtherUser] = useState(false);
+  const nav = useNavigate()
   // Login Checker
   async function Auth(userAccount) {
     window.localStorage.setItem("accountID", await userAccount.homeAccountId  );
@@ -35,8 +37,9 @@ export function Login({
         setUserAzure(loginResponse.account);
         setUser(fetchAccount[index].role);
         nameChecker(loginResponse.account);
-        setLoggedIn(true)
+        setLoggedIn(true) 
         userName();
+        setOpenLogin(false);
         return;
       }
     }
@@ -64,12 +67,12 @@ export function Login({
     try {
       loginResponse = await msalinstance.loginPopup(loginRequest);
       Auth(loginResponse.account);
-      
+      nav('dashboardblanks')
       alert("logged in");
       
     } catch (error) {
-      console.error("Authentication error", error);
-      alert("Authentication failed. Please try again."); // new
+     
+      alert("Authentication failed. Please try again.");
     }
   };
   
@@ -89,9 +92,10 @@ export function Login({
           id="header"
           className=" text-white font-bold text-2x1  relative rounded-t-lg  px-3 h-8 overflow-hidden flex justify-between items-center bg-[#3C91E6]"
         >
+          
           <h1 className="font-bold text-[20px]">Login</h1>
           <button onClick={() => setOpenLogin(!openLogin)}>
-            <IoClose />
+         
           </button>
         </div>
 
@@ -99,11 +103,13 @@ export function Login({
           id="body"
           className=" bg-white h-[190px] w-[270px] flex items-center justify-center "
         >
-          {isAdmin ? (
+          {isOtherUser ? (
             <AdminLogin
               setOpenLogin={setOpenLogin}
               openLogin={openLogin}
               setAdminRole={setAdminRole}
+              setTeacherRole={setTeacherRole}
+              setGuidanceRole={setGuidanceRole}
               setUser={setUser}
               setLoggedIn={setLoggedIn}
             />
@@ -125,8 +131,8 @@ export function Login({
           id="footer"
           className=" hover:text-black  text-white relative rounded-b-md select-none px-3 overflow-hidden flex justify-center items-center bg-[#3C91E6] "
         >
-          <a onClick={() => setAdmin(!isAdmin)} className=" p-2 cursor-pointer">
-            {isAdmin ? "Login with Office 365" : "Login as admin"}
+          <a onClick={() => setOtherUser(!isOtherUser)} className=" p-2 cursor-pointer">
+            {isOtherUser ? "Login with Office 365" : "Login as User"}
           </a>
         </div>
       </div>

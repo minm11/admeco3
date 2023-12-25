@@ -1,7 +1,8 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @font-face {
   font-family: Lato-Regular;
   src: url("assets/Lato-Regular.ttf");
@@ -9,18 +10,59 @@
 
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
 
 Nav {
   transition: transform 0.3s ease-in-out;
 }
+
+.grid-13 {
+  grid-template-columns: repeat(13, minmax(0, 1fr));
+}
+
+.col-13 {
+  grid-column: span 13 / span 13;
+}
+.td {
+  @apply bg-white border-2 border-l-black text-center bg-slate-200;
+}
+
+.table-header {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.table-cell {
+  max-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.labelRegis {
+  @apply text-left grid font-semibold;
+}
+
+.inputRegis {
+  @apply pl-1 p-1 grid rounded-md pl-1 bg-slate-200 focus:shadow-sm focus:shadow-black outline-none font-thin; 
+}
+
+.custom-checkbox {
+  /* Add your desired dimensions */
+  width: 15px;
+  height: 15px;
+  /* Add any additional styling as needed */
+}
+
