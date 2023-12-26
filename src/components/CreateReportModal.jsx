@@ -128,6 +128,7 @@ function CreateReportModal({
       programToSectionMapping[updatedData.program.toUpperCase()]
     )
   );
+  
 
   if (!openModal) return null;
   return (

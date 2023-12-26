@@ -82,8 +82,6 @@ const UserRoleCreation = () => {
       data.email.toLowerCase().includes(searchDeleteName.toLowerCase())
   );
 
-  
-
   return (
     <div className="min-h-screen flex items-center justify-center  w-screen gap-2">
       <div className="bg-white- p-8 rounded shadow-md shadow-black  w-full max-w-md bg-gray-300">

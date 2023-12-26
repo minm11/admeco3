@@ -120,18 +120,32 @@ export default function Import(UserName, handleButtonClick) {
   };
 
   const HandleUploadActivity = async () => {
-    const { data, error } = await supabase.from("activity").insert({
-      user: UserName.UserName,
-      dateTime: moment().format("LLL"),
-      act: "Imported a Excel Report",
-    });
-
-    if (error) {
-      console.log(error);
-    } else if (data) {
-      console.log(data);
+    try {
+      if (excelData && excelData.length > 0) {
+        // Assuming term is the same for all rows, you can take the term from the first row
+        const firstRow = excelData[0];
+        const term = firstRow["TERM"];
+  
+        const { data, error } = await supabase.from("activity").insert({
+          user: UserName.UserName,
+          dateTime: moment().format("LLL"),
+          act: "Imported a Excel Report",
+          term: term,
+        });
+  
+        if (error) {
+          console.log(error);
+        } else if (data) {
+          console.log(data);
+        }
+      } else {
+        console.log("No data to upload to activity.");
+      }
+    } catch (e) {
+      console.error("Error during activity upload: " + e.message);
     }
   };
+  
 
   const HandleUploadData = async () => {
     try {

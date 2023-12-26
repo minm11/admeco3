@@ -61,6 +61,7 @@ export default function CreateReport(UserName) {
       {
         ...text1,
         semester: semesterValue,
+        
       },
     ]);
 
@@ -145,13 +146,18 @@ export default function CreateReport(UserName) {
       user: UserName.UserName,
       dateTime: moment().format("LLL"),
       act: "Imported a Create Report",
+      term: savedData[0].term,
     });
+    
 
     if (error) {
       console.log(error);
     } else if (data) {
+      
     }
   };
+
+ 
 
   const HandleUploadData = async () => {
     try {
@@ -175,7 +181,7 @@ export default function CreateReport(UserName) {
             reason: savedData.reason,
             term: savedData.term,
             semester: semesterValue,
-            name_of_faculty: UserName.UserName,
+            faculty: UserName.UserName,
           });
 
         if (error) {
@@ -290,7 +296,7 @@ export default function CreateReport(UserName) {
       "RIZAL'S LIFE AND WORKS",
     ],
 
-    CS101: ["TEST ", ""],
+    CS101: ["TEST "],
     AIS101: [
       "COMPUTER PRODUCT TOOLS",
       "CONCEPTUAL FRAMEWORK & ACCOUNTING STANDARDS",
@@ -357,9 +363,84 @@ export default function CreateReport(UserName) {
     : [];
 
   // Filter options based on user input
-  const filteredOptions = sectionOption.filter((option) =>
-    option.startsWith(programToSectionMapping[text1.program.toUpperCase()])
-  );
+
+  const [filteredOptions, setFilteredOptions] = useState([]);
+
+  useEffect(() => {
+    const filteredOptions = sectionOption.filter((option) =>
+      option.startsWith(programToSectionMapping[text1.program.toUpperCase()])
+    );
+
+    if (text1.semester === "1ST SEMESTER") {
+      // Filter specific sections for 1st semester
+      const filteredSections = filteredOptions.filter(
+        (option) =>
+          option === "BT101" ||
+          option === "BT301" ||
+          option === "BT102" ||
+          option === "BT302" ||
+          
+          option === "CS101" ||
+          option === "CS301" ||
+          option === "CS102" ||
+          option === "CS302" ||
+
+          option === "AIS101" ||
+          option === "AIS102" ||
+          option === "AIS301" ||
+          option === "AIS302" ||
+
+          option === "HM101" ||
+          option === "HM102" ||
+          option === "HM301" ||
+          option === "HM302" ||
+
+          option === "TM101" ||
+          option === "TM102" ||
+          option === "TM301" ||
+          option === "TM302" ||
+
+          option === "CE101" ||
+          option === "CE102" ||
+          option === "CE301" ||
+          option === "CE302" 
+         
+      );
+
+     
+
+      setFilteredOptions(filteredSections);
+    } else if (text1.semester === "2ND SEMESTER") {
+      // Filter specific sections for 2nd semester
+      const filteredSections = filteredOptions.filter(
+        (option) =>
+          option === "BT201" ||
+          option === "BT202" ||
+
+          option === "CS201" ||
+          option === "CS202" ||
+
+          option === "AIS201" ||
+          option === "AIS202" ||
+         
+          option === "HM201" ||
+          option === "HM202" ||
+
+          option === "TM201" ||
+          option === "TM202" ||
+
+          option === "CE201" ||
+          option === "CE202"
+      );
+
+     
+
+      setFilteredOptions(filteredSections);
+    } else {
+      // Default case or handle additional semesters if needed
+      setFilteredOptions([]);
+    }
+  }, [text1.semester, text1.program]);
 
   // DESIGN
   return (

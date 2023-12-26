@@ -21,6 +21,8 @@ import DashboardTeacher from "./components/DashboardTeacher";
 import DashboardBlanks from "./components/DashboardBlanks";
 import ImportHistory from "./components/ImportHistory";
 import ReportStatus from "./components/ReportStatus";
+import RecentReport from "./components/RecentReport";
+import PastAnnouncement from "./components/PastAnnouncement";
 
 export default function App({ msalinstance }) {
   const [openMenu, setOpenMenu] = useState(false);
@@ -141,10 +143,6 @@ export default function App({ msalinstance }) {
             {/* Check if the user is logged in */}
             {loggedIn ? (
               <>
-
-              
-              
-              
                 <Route path="/activity" element={<Activity />} />
 
                 <Route
@@ -158,7 +156,7 @@ export default function App({ msalinstance }) {
                     />
                   }
                 />
-                <Route path="/reportstatus" element={<ReportStatus/>}/>
+                <Route path="/reportstatus" element={<ReportStatus />} />
                 <Route
                   path="/searchstudent"
                   element={
@@ -170,8 +168,20 @@ export default function App({ msalinstance }) {
                     />
                   }
                 />
+                 <Route
+                  path="/recentreport"
+                  element={
+                    <RecentReport
+                      UserName={UserName}
+                      userName={userName}
+                      currentDate={currentDate}
+                      handleButtonClick={handleButtonClick}
+                    />
+                  }
+                />
                 <Route path="/progress" element={<Progress />} />
                 <Route path="/setdeadline" element={<SetDeadline />} />
+                <Route path="/pastannouncement" element={<PastAnnouncement />} />
                 <Route path="/" element={<Dashboard />} />
                 <Route
                   path="/dashboardteacher"

@@ -8,7 +8,7 @@ import "react-calendar/dist/Calendar.css";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
-export default function SearchStudent(UserName, handleButtonClick) {
+export default function RecentReport(UserName) {
   const [Imports, setImports] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [anotherFilter, setAnotherFilter] = useState("");
@@ -44,8 +44,7 @@ export default function SearchStudent(UserName, handleButtonClick) {
         }
         alert("Wait 10s To Convert to pdf");
         pdf.save("LIST OF ALL STUDENT.pdf");
-        alert("Done Convert To Pdf");
-        
+        alert("Success");
       }
     } catch (error) {
       console.error("Error exporting to PDF", error.message);
@@ -56,23 +55,29 @@ export default function SearchStudent(UserName, handleButtonClick) {
     try {
       const { data, error } = await supabase
         .from("StudentInformation")
-        .select('faculty');
+        .select("faculty");
       if (error) throw error;
-  
+
       // Extract faculty names from the data and convert them to a Set for uniqueness
-      const namesSet = new Set(data.map(item => item.faculty));
+      const namesSet = new Set(data.map((item) => item.faculty));
       setFacultyNames(namesSet);
+
+      // Automatically set facultyFilter based on UserName
+      if (UserName.UserName) {
+        setFacultyFilter(UserName.UserName);
+      }
     } catch (error) {
       console.error("Error", error.message);
     }
   };
 
+  useEffect(() => {
+    fetchFacultyAccount();
+  }, [UserName]);
 
   useEffect(() => {
     fetchFacultyAccount();
   }, []);
-  
-  
 
   const filterData = (data) => {
     return data.filter(
@@ -90,7 +95,6 @@ export default function SearchStudent(UserName, handleButtonClick) {
           ))
     );
   };
-  
 
   const fetchData = async () => {
     try {
@@ -113,7 +117,7 @@ export default function SearchStudent(UserName, handleButtonClick) {
     }, 300); // Adjust the delay as needed (e.g., 300ms)
 
     return () => clearTimeout(delaySearch); // Cleanup on unmount or when searchQuery changes
-  }, [searchQuery, anotherFilter , facultyFilter]);
+  }, [searchQuery, anotherFilter, facultyFilter]);
 
   //*Read account data
   async function importData() {
@@ -158,17 +162,18 @@ export default function SearchStudent(UserName, handleButtonClick) {
       >
         <div id="container left ">
           <h1 className="text-4xl font-semibold mb-2 pt-5 text-black">
-            Search Student
+          Past Report
           </h1>
           <div className="flex items-center justify-between mb-8 ">
             <Link to="" className="hover:text-[#3C91E6]">
               Home
             </Link>
             <BiChevronRight id="icon iconchevronRight" className="mx-2" />
-            <Link to="/searchstudent" className="hover:text-[#3C91E6]">
-              Search Student
+            <Link to="" className="hover:text-[#3C91E6]">
+              Past Report
             </Link>
           </div>
+         
         </div>
 
         {/* searchbar */}
@@ -210,28 +215,43 @@ export default function SearchStudent(UserName, handleButtonClick) {
               <AiOutlineSearch id="icon" className="text-[20px]" />
             </div>
           </div>
+
+        
+          <Link to="/importhistory" className="text-green-500 hover:text-green-600">
+            <button className="hover:bg-blue-800 bg-blue-500 p-1 w-56 rounded-md  text-white ml-[35%] mt-[7%] absolute top-0">
+              Back To Recent Report
+            </button>
+          </Link>
+        
+
           <button
             onClick={exportToPDF}
-            className="hover:bg-green-800 bg-green-500 p-1 w-56 rounded-md  text-white ml-[85%] mt-[7%] absolute top-0"
+            className="hover:bg-green-800 bg-green-500 p-1 w-56 rounded-md  text-white ml-[85%] mt-[2%] absolute top-0"
           >
             CONVERT TO PDF
           </button>
 
           <select
             id="searchbar"
-            className="rounded-r-full border-0 text-md ml-1 outline-none w-72 mx-5 bg-slate-300 mr-[75%] mt-[7%] absolute top-0"
-            placeholder="Search..."
-            type="text"
+            className=" appearance-none rounded-r-full border-0 text-md outline-none w-72 mx-5 bg-slate-300 mr-[75%] mt-[7%] absolute top-0"
             value={facultyFilter}
             onChange={(e) => setFacultyFilter(e.target.value)}
+            disabled
           >
-            <option></option>
+            <option disabled value="">
+              Select Faculty
+            </option>
             {Array.from(facultyNames).map((name, index) => (
-              <option key={index}>{name}</option>
+              <option key={index} value={name}>
+                {name}
+              </option>
             ))}
           </select>
+          
         </div>
       </div>
+
+      
 
       <div id="view data ">
         <div className="table-container " ref={tableRef}>

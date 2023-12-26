@@ -18,10 +18,6 @@ function AdminLogin({
     
     e.preventDefault();
     const { data: adminData } = await supabase.from("admin").select();
-    const { data: teacherData } = await supabase.from("admin").select();
-    const { data: guidanceData } = await supabase.from("admin").select();
-    let isGuidance = false;
-    let isTeacher = false;
     let isAdmin = false;
 
     for (let index = 0; index < adminData.length; index++) {
@@ -36,45 +32,8 @@ function AdminLogin({
       }
     }
 
-    // for (let index = 0; index < teacherData.length; index++) {
-    //   if (
-    //     teacherData[index].teachername === info.username &&
-    //     teacherData[index].teacherpass === info.password
-    //   ) {
-    //     window.localStorage.setItem("susi", "9584191f-150d-45f0-8ceb-94c953c05c7a")
-    //     isTeacher = true;
-    //     setLoggedIn(true);
-    //     break; // Exit the loop once a match is found
-    //   }
-    // }
 
-    // for (let index = 0; index < guidanceData.length; index++) {
-    //   if (
-    //     guidanceData[index].guidancename === info.username &&
-    //     guidanceData[index].guidancepass === info.password
-    //   ) {
-    //     window.localStorage.setItem("susi", "04e2e033-a7d9-4f85-a55a-8aeab41845ec")
-    //     isGuidance = true;
-    //     setLoggedIn(true);
-    //     break; // Exit the loop once a match is found
-    //   }
-    // }
 
-    // if (isGuidance) {
-    //   setGuidanceRole(true);
-    //   setUser("guidance");
-    //   close();
-    //   nav('/')
-    // } 
-
-    // else if (isTeacher) {
-    //   setTeacherRole(true);
-    //   setUser("teacher");
-    //   close();
-    //   nav('/')
-    // } 
-
-    // else 
     if (isAdmin) {
       setAdminRole(true);
       setUser("admin");

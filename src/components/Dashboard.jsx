@@ -5,7 +5,7 @@ import { BiChevronRight, BiErrorAlt, BiSolidGroup } from "react-icons/bi";
 import { BsCalendar2MinusFill } from "react-icons/bs";
 import moment from "moment/moment";
 
-export default function Home({ username, openMenu}) {
+export default function Home({ username, openMenu }) {
   const [activities, setActivities] = useState([]);
 
   const [studentData, setStudentData] = useState([]);
@@ -62,12 +62,16 @@ export default function Home({ username, openMenu}) {
       const { data, error } = await supabase
         .from("Announcements")
         .select("*")
-        .order("start", { ascending: false }); // Order by start date in descending order
+        .order("start", { ascending: false });
 
       if (error) {
         console.error("Error fetching announcement data:", error);
       } else {
-        setAnnouncementLog(data);
+        const nonArchivedAnnouncements = data.filter(
+          (announcement) => announcement.status !== "archived"
+        );
+
+        setAnnouncementLog(nonArchivedAnnouncements);
         console.log("Success announcement data >_< ");
       }
     } catch (error) {
@@ -104,11 +108,6 @@ export default function Home({ username, openMenu}) {
   }, []);
 
   return (
-
-    
-     
-   
-
     <div
       id="main"
       className="pt-9 pb-28 px-5 font-lato mt-7 max-h-screen overflow-y-auto fixed w-[100%]"
@@ -142,7 +141,9 @@ export default function Home({ username, openMenu}) {
           </thead>
 
           <tbody className="">
-            {AnnouncementLog.map((Announcement) => (
+            {AnnouncementLog.filter(
+              (announcement) => announcement.status !== "archived"
+            ).map((Announcement) => (
               <ul
                 key={Announcement.id}
                 className="flex"

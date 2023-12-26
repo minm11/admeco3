@@ -140,9 +140,11 @@ export default function SideBar({ user, UserName, adminRole, teacherRole, guidan
               -700"
                 >
                   <FaHistory  id="icon dashboard" className="" />
-                  <h1 className="ml-4">Import History</h1>
+                  <h1 className="ml-4">Recent Report</h1>
                 </li>
               </Link>
+
+         
             </>
           )}
 

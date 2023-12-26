@@ -9,56 +9,12 @@ import moment from "moment/moment";
 import { clear } from "@testing-library/user-event/dist/clear";
 import { validate } from "uuid";
 
-const SetDeadline = () => {
-  const [title, setTitle] = useState("");
-  const [selectedDateStart, setSelectedDateStart] = useState(null);
-  const [selectedDateDeadline, setSelectedDateDeadline] = useState(null);
+const PastAnnouncement = () => {
   const [activities, setActivities] = useState([]);
   const [AnnouncementLog, setAnnouncementLog] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [selectedRow, setSelectedRow] = useState(null);
-  const [totalSubmissionCount, setTotalSubmissionCount] = useState(0);
-
-  const handleDateDeadlineChange = (date) => {
-    setSelectedDateDeadline(date);
-  };
-
-  const handleDateStart = (dates) => {
-    setSelectedDateStart(dates);
-  };
-
-  const handleTitleChange = (e) => {
-    setTitle(e.target.value);
-  };
-
-  const handleSetDeadline = async () => {
-    try {
-      const filteredActivities = activities.filter((activity) =>
-        moment(activity.dateTime).isSameOrAfter(selectedDateStart)
-      );
-
-      setActivities(filteredActivities);
-
-      // Insert data into the 'announcements' table
-      const { data, error } = await supabase.from("Announcements").insert([
-        {
-          title: title,
-          start: selectedDateStart,
-          deadline: selectedDateDeadline,
-        },
-      ]);
-
-      if (error) {
-        console.error("Error inserting data:", error);
-      } else {
-        console.log("Data inserted successfully:", data);
-        alert("Success Announcement");
-      }
-    } catch (error) {
-      console.error("Error:", error.message);
-    }
-  };
 
   async function activityData() {
     try {
@@ -116,11 +72,11 @@ const SetDeadline = () => {
         console.error("Error fetching announcement data:", error);
       } else {
         const nonArchivedAnnouncements = data.filter(
-          (announcement) => announcement.status !== "archived"
+          (announcement) => announcement.status === "archived"
         );
 
         setAnnouncementLog(nonArchivedAnnouncements);
-        console.log("Success announcement data >_< ");
+        
       }
     } catch (error) {
       console.error("Error", error.message);
@@ -132,7 +88,7 @@ const SetDeadline = () => {
       // Update the announcement status to indicate it's archived
       const { data, error } = await supabase
         .from("Announcements")
-        .update({ status: "archived" })
+        .update({ status: null })
         .eq("id", announcementId);
 
       if (error) {
@@ -140,7 +96,7 @@ const SetDeadline = () => {
       } else {
         console.log("Data updated successfully:", data);
 
-        alert(`Announcement archived successfully`);
+        alert(`Announcement Unarchived successfully`);
 
         // Update the AnnouncementLog state by marking the announcement as archived
         setAnnouncementLog((prevAnnouncements) =>
@@ -175,88 +131,20 @@ const SetDeadline = () => {
               Create Announcement
             </Link>
           </div>
-
-          <div className="mb-4">
-            <input
-              type="text"
-              value={title}
-              onChange={handleTitleChange}
-              placeholder="Enter title"
-              className="w-full h-[35px] border rounded-md p-2"
-            />
-          </div>
-
-          <div className="mb-4">
-            <DatePicker
-              selected={selectedDateStart}
-              onChange={handleDateStart}
-              dateFormat="yyyy/MM/dd"
-              placeholderText="Select a start"
-              className="w-full h-[35px] border rounded-md p-2"
-            />
-          </div>
-
-          <div className="mb-4">
-            <DatePicker
-              selected={selectedDateDeadline}
-              onChange={handleDateDeadlineChange}
-              dateFormat="yyyy/MM/dd"
-              placeholderText="Select a deadline"
-              className="w-full h-[35px] border rounded-md p-2"
-            />
-          </div>
-
-          <div className="flex flex-col gap-4">
-            <div>
-              <button
-                onClick={() => {
-                  handleSetDeadline();
-                }}
-                className="md:w-[97%] w-[100%] h-[35px] bg-[#0074B7] bg-blue-500 text-white hover:bg-blue-600  rounded-md "
-              >
-                Set Deadline
-              </button>
-            </div>
-
-            <div>
-              <button
-                onClick={() => {
-                  setTitle("");
-                  setSelectedDateStart(null);
-                  setSelectedDateDeadline(null);
-                }}
-                className="md:w-[97%] w-[100%] h-[35px] bg-[#0074B7] bg-red-500 text-white rounded-md hover:bg-red-600"
-              >
-                Clear
-              </button>
-            </div>
-
-            <div>
-              <Link
-                to="/pastannouncement"
-                className="text-green-500 hover:text-green-600"
-              >
-                <button className="bg-blue-500 text-white h-9 px-4 rounded hover:bg-blue-600 mb-3">
-                 Past Announcement
-                </button>
-              </Link>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex-col bg-[#c8d7e5] md:h-[38%] h-[28%] p-3 rounded-tr-md overflow-y-auto w-[70%] shadow-black shadow-md">
-          <table className="min-w-full bg-white border border-gray-300 p-3">
+         
+          <div className="flex-col bg-[#c8d7e5] w-[200%] md:h-[38%] h-[28%] p-3 rounded-tr-md overflow-y-auto w-[70%] shadow-black shadow-md">
+          <table className="min-w-full bg-white  border border-gray-300 p-3">
             <thead className="flex">
               <tr>
                 <th className="text-4xl font-semibold mb-5 text-black p-3">
-                  Announcement
+                  Past Announcement
                 </th>
                 <th className="flex items-center gap-4"></th>
               </tr>
             </thead>
             <tbody className="flex">
               {AnnouncementLog.filter(
-                (announcement) => announcement.status !== "archived"
+                (announcement) => announcement.status === "archived"
               ).map((Announcement) => (
                 <tr
                   key={Announcement.id}
@@ -270,8 +158,9 @@ const SetDeadline = () => {
                 >
                   <td colSpan="2" className="p-3 flex items-center gap-4">
                     <div
-                      className="z-0 bg-gray-100 p-3 text-start rounded-md hover:bg-gray-400 hover:cursor-pointer
-                   hover:translate-x-3 w-[230px] h-[130px] text-[15px] overflow-hidden duration-500 hover:shadow-lg hover:shadow-black"
+                        className={`z-0 p-3 text-start rounded-md hover:bg-gray-400 hover:cursor-pointer
+                        hover:translate-x-3 w-[250px] h-[130px] text-[15px] overflow-hidden duration-500 hover:shadow-lg hover:shadow-black
+                        bg-red-200`}
                     >
                       <label className="truncate flex items-center">
                         {Announcement.title}
@@ -306,7 +195,7 @@ const SetDeadline = () => {
                             handleArchiveAnnouncement(Announcement.id); // Set the selected row ID
                           }}
                         >
-                          Achieve
+                          Unachieve
                         </button>
                       </div>
                     </div>
@@ -317,8 +206,15 @@ const SetDeadline = () => {
             </tbody>
           </table>
         </div>
-
-        
+        <Link
+            to="/setdeadline"
+            className="text-green-500 hover:text-green-600"
+          >
+            <button className="bg-blue-500 text-white h-9 px-4 rounded hover:bg-blue-600 mb-3">
+              Back to Create Announcement
+            </button>
+          </Link>
+        </div>
 
         {/* Modal */}
         {isModalOpen && (
@@ -370,4 +266,4 @@ const SetDeadline = () => {
   );
 };
 
-export default SetDeadline;
+export default PastAnnouncement;
