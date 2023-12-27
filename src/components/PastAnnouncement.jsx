@@ -215,7 +215,8 @@ const PastAnnouncement = () => {
             </button>
           </Link>
         </div>
-
+          
+          
         {/* Modal */}
         {isModalOpen && (
           <div className="fixed inset-0 flex items-center justify-center">
