@@ -168,7 +168,7 @@ export default function SideBar({ user, UserName, adminRole, teacherRole, guidan
                   <h1 className="ml-4">Create Announcement</h1>
                 </li>
               </Link>
-              <Link to="/listimportfile" className=" ">
+              {/* <Link to="/listimportfile" className=" ">
                 <li
                   id="active"
                   className="h-9 bg-[#F9F9F9]  items-center ml-2 p-3 mr-[2px] rounded-full mb-3 flex hover:text-[#3C91E6] hover:bg-black"
@@ -176,7 +176,7 @@ export default function SideBar({ user, UserName, adminRole, teacherRole, guidan
                   <FaRegListAlt id="icon deadline" className="" />
                   <h1 className="ml-4"> View Report</h1>
                 </li>
-              </Link>
+              </Link> */}
             </>
           )}
 
