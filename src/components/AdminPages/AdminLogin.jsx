@@ -26,7 +26,7 @@ function AdminLogin({
   //       adminData[index].adminpass === info.password
   //     ) {
   //       window.localStorage.setItem("susi", "04e2e033-a7d9-4f85-a55a-8aeab41845ec")
-  //       isAdmin = true;
+  //    
   //       setLoggedIn(true);
   //       break; // Exit the loop once a match is found
   //     }
@@ -58,6 +58,7 @@ function AdminLogin({
         setUser("admin");
        close();
         nav('/')
+        setLoggedIn(true);
         return;
       } 
       else if("teacher" === info.username && "teacher"=== info.password){
@@ -65,6 +66,7 @@ function AdminLogin({
         setUser("teacher");
         close();
         nav('/')
+        setLoggedIn(true);
         return;
       }
       else if("guidance" === info.username && "guidance"=== info.password){
@@ -72,6 +74,7 @@ function AdminLogin({
         setUser("guidance");
         close();
         nav('/')
+        setLoggedIn(true);
         return;
       }
       else {
