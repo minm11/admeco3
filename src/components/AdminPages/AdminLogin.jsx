@@ -45,12 +45,12 @@ function AdminLogin({
   //     alert("Access Denied");
   //   }
   // }
+//sana tapos na talaga
 
   
 
   const close = () => setOpenLogin(!openLogin);
 
-  // const close = () => setOpenLogin(!openLogin);
   async function handleLoginAdmin(e) {
     e.preventDefault();
   if ("admin" === info.username && "admin"=== info.password) {
