@@ -8,7 +8,7 @@ import "react-calendar/dist/Calendar.css";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
-export default function SearchStudent(UserName, handleButtonClick) {
+export default function Import(UserName, handleButtonClick) {
   const [Imports, setImports] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [anotherFilter, setAnotherFilter] = useState("");
@@ -42,10 +42,9 @@ export default function SearchStudent(UserName, handleButtonClick) {
           pdf.addImage(imageData, "PNG", 10, currentY, 180, 0);
           currentY += 20; // Adjust the Y-coordinate for the next row
         }
-        alert("Wait 10s To Convert to pdf");
+
         pdf.save("LIST OF ALL STUDENT.pdf");
-        alert("Done Convert To Pdf");
-        
+        alert("Wait 10s To Convert to pdf");
       }
     } catch (error) {
       console.error("Error exporting to PDF", error.message);
@@ -169,14 +168,31 @@ export default function SearchStudent(UserName, handleButtonClick) {
               Search Student
             </Link>
           </div>
-        </div>
 
+          
+          <div>
+              <select
+            id="searchbar"
+            className="  border-0 text-md outline-none w-72  h-8 bg-slate-300   mt-[7%] mr-[72%] absolute top-0"
+            placeholder=""
+            type="text"
+            value={facultyFilter}
+            onChange={(e) => setFacultyFilter(e.target.value)}
+            >
+            <option></option>
+            {Array.from(facultyNames).map((name, index) => (
+              <option key={index}>{name}</option>
+            ))}
+            </select>
+            </div>
+        </div>
+          
         {/* searchbar */}
         <div className="flex flex-col items-center justify-center mt-5 me-[40%]">
           {/* Select Semester */}
           <div
             id="dropdowncontainer"
-            className="bg-slate-300 rounded-r-full  flex justify-between h-8 "
+            className="bg-slate-300  flex justify-between h-8 "
           >
             <label className="text-[20px] text-grey-700 mb-1 ml-7">
               Select Semester
@@ -189,24 +205,27 @@ export default function SearchStudent(UserName, handleButtonClick) {
               onChange={(e) => setAnotherFilter(e.target.value)}
             >
               <option> </option>
+              
               <option>1ST SEMESTER</option>
               <option>2ND SEMESTER</option>
             </select>
           </div>
 
+          
+
           <div
             id="searchbarcontainer"
-            className="bg-slate-300 rounded-r-full  flex justify-between  py-1 mt-5 "
+            className="bg-slate-300 flex justify-between mt-5 "
           >
             <input
               id="searchbar"
-              className="rounded-r-full  border-0 text-md outline-none w-72 mx-5 bg-slate-300"
+              className=" border-0 text-md outline-none w-72 mx-5 bg-slate-300"
               placeholder="Search..."
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
-            <div className="bg-yellow-400  rounded-r-full text-sm flex items-center p-2 h-9">
+            <div className="bg-yellow-400  text-sm flex items-center p-2 h-9">
               <AiOutlineSearch id="icon" className="text-[20px]" />
             </div>
           </div>
@@ -217,19 +236,10 @@ export default function SearchStudent(UserName, handleButtonClick) {
             CONVERT TO PDF
           </button>
 
-          <select
-            id="searchbar"
-            className="rounded-r-full border-0 text-md ml-1 outline-none w-72 mx-5 bg-slate-300 mr-[75%] mt-[7%] absolute top-0"
-            placeholder="Search..."
-            type="text"
-            value={facultyFilter}
-            onChange={(e) => setFacultyFilter(e.target.value)}
-          >
-            <option></option>
-            {Array.from(facultyNames).map((name, index) => (
-              <option key={index}>{name}</option>
-            ))}
-          </select>
+          
+            
+          
+          
         </div>
       </div>
 

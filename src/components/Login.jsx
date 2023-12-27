@@ -108,8 +108,6 @@ export function Login({
               setOpenLogin={setOpenLogin}
               openLogin={openLogin}
               setAdminRole={setAdminRole}
-              setTeacherRole={setTeacherRole}
-              setGuidanceRole={setGuidanceRole}
               setUser={setUser}
               setLoggedIn={setLoggedIn}
             />

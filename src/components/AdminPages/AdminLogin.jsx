@@ -7,53 +7,79 @@ function AdminLogin({
   setOpenLogin,
   openLogin,
   setAdminRole,
-  setTeacherRole,
-  setGuidanceRole,
   setUser,
   setLoggedIn,
 }) {
   const [info, setInfo] = useState({ username: "", password: "" });
   const nav = useNavigate()
-  async function handleLoginAdmin(e) {
+
+
+  // async function handleLoginAdmin(e) {
     
-    e.preventDefault();
-    const { data: adminData } = await supabase.from("admin").select();
-    let isAdmin = false;
+  //   e.preventDefault();
+  //   const { data: adminData } = await supabase.from("admin").select();
+  //   let isAdmin = false;
 
-    for (let index = 0; index < adminData.length; index++) {
-      if (
-        adminData[index].adminname === info.username &&
-        adminData[index].adminpass === info.password
-      ) {
-        window.localStorage.setItem("susi", "04e2e033-a7d9-4f85-a55a-8aeab41845ec")
-        isAdmin = true;
-        setLoggedIn(true);
-        break; // Exit the loop once a match is found
-      }
-    }
+  //   for (let index = 0; index < adminData.length; index++) {
+  //     if (
+  //       adminData[index].adminname === info.username &&
+  //       adminData[index].adminpass === info.password
+  //     ) {
+  //       window.localStorage.setItem("susi", "04e2e033-a7d9-4f85-a55a-8aeab41845ec")
+  //       isAdmin = true;
+  //       setLoggedIn(true);
+  //       break; // Exit the loop once a match is found
+  //     }
+  //   }
 
 
 
-    if (isAdmin) {
-      setAdminRole(true);
-      setUser("admin");
-      close();
-      nav('/')
-    } 
-    else {
-      setAdminRole(false);
-      setTeacherRole(false);
-      setGuidanceRole(false);
-      alert("Access Denied");
-    }
-  }
-
-  
+  //   if (isAdmin) {
+  //     setAdminRole(true);
+  //     setUser("admin");
+  //     close();
+  //     nav('/')
+  //   } 
+  //   else {
+  //     setAdminRole(false);
+  //     alert("Access Denied");
+  //   }
+  // }
 
   
 
   const close = () => setOpenLogin(!openLogin);
 
+  // const close = () => setOpenLogin(!openLogin);
+  async function handleLoginAdmin(e) {
+    e.preventDefault();
+  if ("admin" === info.username && "admin"=== info.password) {
+    console.log('Admin login success');
+        setUser("admin");
+       close();
+        nav('/')
+        return;
+      } 
+      else if("teacher" === info.username && "teacher"=== info.password){
+        console.log('teacher login success');
+        setUser("teacher");
+        close();
+        nav('/')
+        return;
+      }
+      else if("guidance" === info.username && "guidance"=== info.password){
+        console.log('guidance login success');
+        setUser("guidance");
+        close();
+        nav('/')
+        return;
+      }
+      else {
+        setAdminRole(false);
+        alert("Access Denied");
+      }
+      
+    }
   const handleChange = (e) => {
     setInfo((previnfo) => {
       return { ...previnfo, [e.target.name]: e.target.value };

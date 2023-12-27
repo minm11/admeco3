@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { BiChevronRight } from "react-icons/bi";
 import { BsCalendar2MinusFill } from "react-icons/bs";
-
 import { AiOutlineSearch } from "react-icons/ai";
 import supabase from "../supabaseClient";
 
