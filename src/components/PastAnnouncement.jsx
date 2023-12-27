@@ -120,19 +120,19 @@ const PastAnnouncement = () => {
       <div id="headTitle" className="flex items-center gap-16">
         <div id="container left">
           <h1 className="text-4xl font-semibold mb-5 text-black">
-            Create Announcement
+          Past Announcement
           </h1>
           <div className="flex items-center gap-4">
             <Link to="" className="hover:text-[#3C91E6]">
               Home
             </Link>
             <BiChevronRight id="icon iconchevronRight" className="" />
-            <Link to="/setDeadline" className="hover:text-[#3C91E6]">
-              Create Announcement
+            <Link to="" className="hover:text-[#3C91E6]">
+            Past Announcement
             </Link>
           </div>
          
-          <div className="flex-col bg-[#c8d7e5] w-[300%] md:h-[38%] h-[28%] p-3 rounded-tr-md overflow-y-auto w-[70%] shadow-black shadow-md">
+          <div className="flex-col bg-[#c8d7e5] w-[300%] md:h-[38%] h-[28%] p-3 rounded-tr-md overflow-y-auto  shadow-black shadow-md">
           <table className="min-w-full bg-white  border border-gray-300 p-3">
             <thead className="flex">
               <tr>
