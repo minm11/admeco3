@@ -132,7 +132,7 @@ const PastAnnouncement = () => {
             </Link>
           </div>
          
-          <div className="flex-col bg-[#c8d7e5] w-[200%] md:h-[38%] h-[28%] p-3 rounded-tr-md overflow-y-auto w-[70%] shadow-black shadow-md">
+          <div className="flex-col bg-[#c8d7e5] w-[300%] md:h-[38%] h-[28%] p-3 rounded-tr-md overflow-y-auto w-[70%] shadow-black shadow-md">
           <table className="min-w-full bg-white  border border-gray-300 p-3">
             <thead className="flex">
               <tr>
